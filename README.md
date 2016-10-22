@@ -3,6 +3,8 @@
 Monglorious is a MongoDB client library which forgoes a programmatic DSL and 
 accepts textual queries in the syntax of the MongoDB shell.
 
+[![Build Status](https://travis-ci.org/baumandm/monglorious.svg?branch=master)](https://travis-ci.org/baumandm/monglorious)
+
 ## Under Development
 
 This library is in fledgeling development mode.  Stay tuned for updates.
