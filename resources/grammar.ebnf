@@ -1,6 +1,6 @@
-command = show-statement | collection-statement
+command = show-command | collection-command
 
-show-statement = <'SHOW'> db-object
+show-command = <'SHOW'> db-object
 
 <db-object> = dbs | collections | users | roles | profile | databases
 
@@ -11,12 +11,12 @@ roles = <'ROLES'>
 profile = <'PROFILE'>
 databases = <'DATABASES'>
 
-collection-statement = <'db'> DOT <literal> DOT function-name LPAREN RPAREN
+collection-command = <'db'> DOT literal DOT function-name LPAREN RPAREN
 
-<function-name> = <literal>
+<function-name> = literal
 
 <DOT> = <'.'>
 <LPAREN> = <'('>
 <RPAREN> = <')'>
 
-literal = #'[a-zA-Z0-9_]+'
+<literal> = #'[a-zA-Z0-9_]+'
