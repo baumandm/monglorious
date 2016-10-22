@@ -11,7 +11,9 @@ roles = <'ROLES'>
 profile = <'PROFILE'>
 databases = <'DATABASES'>
 
-collection-statement = <'db'> DOT <variable> DOT <literal> LPAREN RPAREN
+collection-statement = <'db'> DOT <literal> DOT function-name LPAREN RPAREN
+
+<function-name> = <literal>
 
 <DOT> = <'.'>
 <LPAREN> = <'('>
