@@ -1,4 +1,4 @@
-command = show-statement
+command = show-statement | collection-statement
 
 show-statement = <'SHOW'> db-object
 
@@ -10,3 +10,11 @@ users = <'USERS'>
 roles = <'ROLES'>
 profile = <'PROFILE'>
 databases = <'DATABASES'>
+
+collection-statement = <'db'> DOT <variable> DOT <literal> LPAREN RPAREN
+
+<DOT> = <'.'>
+<LPAREN> = <'('>
+<RPAREN> = <')'>
+
+literal = #'[a-zA-Z0-9_]+'
