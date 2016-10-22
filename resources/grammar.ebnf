@@ -1,0 +1,12 @@
+command = show-statement
+
+show-statement = <'SHOW'> db-object
+
+<db-object> = dbs | collections | users | roles | profile | databases
+
+dbs = <'DBS'>
+collections = <'COLLECTIONS'>
+users = <'USERS'>
+roles = <'ROLES'>
+profile = <'PROFILE'>
+databases = <'DATABASES'>
