@@ -7,7 +7,8 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [instaparse "1.4.3"]
-                 [com.novemberain/monger "3.1.0"]]
+                 [com.novemberain/monger "3.1.0"]
+                 [org.clojars.frozenlock/commons-lang "3.3.0"]]
 
   :main ^:skip-aot monglorious.core
   :target-path "target/%s"

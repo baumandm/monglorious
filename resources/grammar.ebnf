@@ -1,9 +1,7 @@
-command = show-command | collection-command
+query = show-command | run-command | collection-command
 
 show-command = <'SHOW'> db-object
-
 <db-object> = dbs | collections | users | roles | profile | databases
-
 dbs = <'DBS'>
 collections = <'COLLECTIONS'>
 users = <'USERS'>
@@ -11,12 +9,29 @@ roles = <'ROLES'>
 profile = <'PROFILE'>
 databases = <'DATABASES'>
 
-collection-command = <'db'> DOT literal DOT function-name LPAREN RPAREN
+collection-command = DB DOT collection-name DOT function-name LPAREN (literal (COMMA literal)*)? RPAREN
+<collection-name> = identifier
+<function-name> = identifier
 
-<function-name> = literal
+run-command = DB DOT <'RUNCOMMAND'> LPAREN string RPAREN
 
+(* Common Definitions *)
+identifier = #'[a-zA-Z0-9_]+'
+<literal> = string | number | map | list | boolean
+<string> = single-quoted-string | double-quoted-string
+single-quoted-string = #'(?s)\'\'|\'(?:.*?([^\\]|\\\\))?\''
+double-quoted-string = #'(?s)\"\"|\"(?:.*?([^\\]|\\\\))\"'
+number = #'[-+]?(0(\.\d*)?|([1-9]\d*\.?\d*)|(\.\d+))([Ee][+-]?\d+)?'
+
+list = <'['> (literal (COMMA literal)*)? <']'>
+map = <'{'> (map-item (COMMA map-item)*)? <'}'>
+<map-item> = (identifier | string) <':'> literal
+boolean = TRUE | FALSE
+
+<DB> = <'DB'>
 <DOT> = <'.'>
+<COMMA> = <','>
 <LPAREN> = <'('>
 <RPAREN> = <')'>
-
-<literal> = #'[a-zA-Z0-9_]+'
+TRUE = <'TRUE'>
+FALSE = <'FALSE'>
