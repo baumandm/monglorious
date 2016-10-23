@@ -1,9 +1,8 @@
-(ns monglorious.core-test
-  (:require [monglorious.core :refer :all]
-            [clojure.string :as str])
-  (:use midje.sweet)  )
+(ns monglorious.parser-test
+  (:require [monglorious.parser :refer :all])
+  (:use midje.sweet))
 
-;; Test parse()
+;; Test parse-query()
 
 (fact "Monglorious parses strings"
       (parse-query "\"foo\"" :string) => ["foo"]
