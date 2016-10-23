@@ -20,7 +20,9 @@
 
 (fact "Monglorious parses booleans"
       (parse-query "true" :literal) => '(true)
-      (parse-query "false" :literal) => '(false))
+      (parse-query "TRUE" :literal) => '(true)
+      (parse-query "false" :literal) => '(false)
+      (parse-query "FALSE" :literal) => '(false))
 
 (fact "Monglorious parses lists"
       (parse-query "[1,2,3]" :literal) => [[1,2,3]]
@@ -30,8 +32,10 @@
 
 (fact "Monglorious parses maps"
       (parse-query "{x:1,y:2,z:3}" :literal) => [{"x" 1 "y" 2 "z" 3}]
+      (parse-query "{'x':1,'y':2,'z':3}" :literal) => [{"x" 1 "y" 2 "z" 3}]
       (parse-query "{_id:'123', title:'dragon'}" :literal) => [{"_id" "123" "title" "dragon"}]
-      (parse-query "{x:[1,2,3],y:{a:\"b\"}}" :literal) => [{"x" [1 2 3] "y" { "a" "b"}}])
+      (parse-query "{x:[1,2,3],y:{a:\"b\"}}" :literal) => [{"x" [1 2 3] "y" { "a" "b"}}]
+      (parse-query "{x:{y:{z:1}}}" :literal) => [{"x" {"y" {"z" 1}}}])
 
 (fact "Monglorious parses SHOW ___ commands"
       (parse-query "show dbs") => [:show-command [:dbs]]
