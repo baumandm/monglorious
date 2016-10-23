@@ -1,3 +1,4 @@
+(* MONGLORIOUS! *)
 query = show-command | run-command | collection-command
 
 show-command = <'SHOW'> db-object

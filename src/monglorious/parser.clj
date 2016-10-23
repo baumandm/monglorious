@@ -1,6 +1,6 @@
 (ns monglorious.parser
-  (:gen-class)
-  (:require [instaparse.core :as insta]
+  (:require [monglorious.transforms :refer :all]
+            [instaparse.core :as insta]
             [instaparse.transform :as insta-transform]
             [monger.core :as mg]
             [monger.command :as mg-cmd]
@@ -64,18 +64,10 @@
                      (simplfy))))
 
 (defn compile-query
-  "Parses and compiles a MongoDB query"
+  "Parses and compiles a MongoDB query into a function accepting (conn db)"
   [query]
   (->> query
        (parse-query)
        (insta-transform/transform
-         {:run-command
-          (fn [command-name]
-            (case command-name
-              "serverStatus"
-              (fn [conn db] (from-db-object (mg-cmd/server-status db) false))
-              "dbStats"
-              (fn [conn db] (from-db-object (mg-cmd/db-stats db) false))
-
-              (throw (Exception. "Unsupported database command."))))
+         {:run-command run-command-transform
           })))
