@@ -5,12 +5,16 @@
 
 (defn get-connection
   "Returns a connection and db object that can be reused multiple times"
-  [connection-options-or-uri db-name]
-  (if (string? connection-options-or-uri)
-    (mg/connect-via-uri connection-options-or-uri)
-    (let [conn (mg/connect connection-options-or-uri)
-          db (mg/get-db conn db-name)]
-      {:conn conn :db db})))
+  ([connection-uri]
+   (if (string? connection-uri)
+     (mg/connect-via-uri connection-uri)
+     (throw (Exception. "Missing db-name argument when not using URI."))))
+  ([connection-options-or-uri db-name]
+   (if (string? connection-options-or-uri)
+     (mg/connect-via-uri connection-options-or-uri)
+     (let [conn (mg/connect connection-options-or-uri)
+           db (mg/get-db conn db-name)]
+       {:conn conn :db db}))))
 
 (defn execute-with-connection
   "Executes a MongoDB query given an open connection and db"

@@ -46,7 +46,7 @@
 
 (fact "Monglorious parses RunCommand commands"
       (parse-query "db.runCommand(\"foo\")") => [:run-command "foo"]
-      (parse-query "db.runCommand('server-status')") => [:run-command "server-status"])
+      (parse-query "db.runCommand('serverStatus')") => [:run-command "serverStatus"])
 
 (fact "Monglorious parses DB Collection commands"
       (parse-query "db.fooCollection.count()") => [:collection-command "fooCollection" "count"])

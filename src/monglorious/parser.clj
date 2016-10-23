@@ -3,7 +3,8 @@
   (:require [instaparse.core :as insta]
             [instaparse.transform :as insta-transform]
             [monger.core :as mg]
-            [monger.command :as mg-cmd])
+            [monger.command :as mg-cmd]
+            [monger.conversion :refer [from-db-object]])
   (:import (org.apache.commons.lang3 StringEscapeUtils)))
 
 (def ^{:private true} whitespace
@@ -72,9 +73,9 @@
           (fn [command-name]
             (case command-name
               "serverStatus"
-              (fn [conn db] (mg-cmd/server-status db))
+              (fn [conn db] (from-db-object (mg-cmd/server-status db) false))
               "dbStats"
-              (fn [conn db] (mg-cmd/db-stats db))
+              (fn [conn db] (from-db-object (mg-cmd/db-stats db) false))
 
               (throw (Exception. "Unsupported database command."))))
           })))
