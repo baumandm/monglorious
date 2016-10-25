@@ -20,7 +20,3 @@
     db.<collection>.findOne(<query>)
     db.<collection>.count()
     db.<collection>.find(<query>).count
-
-    db.runCommand("serverStatus")
-    db.runCommand("dbStats")
-    
