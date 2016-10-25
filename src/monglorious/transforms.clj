@@ -5,16 +5,17 @@
 
 (defn run-command-transform
   [command]
-  (cond
-    (= command "serverStatus")
-    (fn [_ db] (from-db-object (mg-cmd/server-status db) false))
+  (let [command (if (string? command) (clojure.string/lower-case command) command)]
+    (cond
+      (= command "serverstatus")
+      (fn [_ db] (from-db-object (mg-cmd/server-status db) false))
 
-    (= command "dbStats")
-    (fn [_ db] (from-db-object (mg-cmd/db-stats db) false))
+      (= command "dbstats")
+      (fn [_ db] (from-db-object (mg-cmd/db-stats db) false))
 
-    (and (map? command) (contains? command "collStats"))
-    (fn [_ db] (from-db-object (mg-cmd/collection-stats db (get command "collStats")) false))
+      (and (map? command) (contains? command "collStats"))
+      (fn [_ db] (from-db-object (mg-cmd/collection-stats db (get command "collStats")) false))
 
-    :else
-    (throw (Exception. "Unsupported database command."))))
+      :else
+      (throw (Exception. "Unsupported database command.")))))
 

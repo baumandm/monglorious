@@ -9,14 +9,11 @@
 (defn check-ok
   [expected response] (= expected (get response "ok")))
 
-(defn is-ok?
-  "Checks that a MongoDB response has ok: 1.0"
-  [response] (partial check-ok 1.0))
+(def is-ok? "Checks that a MongoDB response has ok: 1.0"
+  (partial check-ok 1.0))
 
-(defn is-not-ok?
-  "Checks that a MongoDB response has ok: 0.0"
-  [response]
-  [response] (partial check-ok 0.0))
+(def is-not-ok? "Checks that a MongoDB response has ok: 0.0"
+  (partial check-ok 0.0))
 
 ;; Create some sample data before tests, delete after
 (against-background
@@ -33,10 +30,13 @@
 
   ;; Facts
   (fact "Monglorious executes serverStatus"
-        (execute {} "testdb" "db.runCommand('serverStatus')") => map?)
+        (execute {} "testdb" "db.runCommand('serverStatus')") => is-ok?
+        (execute {} "testdb" "db.runCommand('serverstatus')") => is-ok?
+        (execute {} "testdb" "db.runCommand(\"SERVERSTATUS\")") => is-ok?)
 
   (fact "Monglorious executes dbStats"
-        (execute {} "testdb" "db.runCommand('dbStats')") => map?)
+        (execute {} "testdb" "db.runCommand('dbStats')") => is-ok?
+        (execute {} "testdb" "db.runCommand('dbstats')") => is-ok?)
 
   (fact "Monglorious executes collStats"
         (execute {} "testdb" "db.runCommand({collStats: 'unknownCollection'})") => is-not-ok?
