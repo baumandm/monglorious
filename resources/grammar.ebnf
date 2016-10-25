@@ -14,7 +14,7 @@ collection-command = DB DOT collection-name DOT function-name LPAREN (literal (C
 <collection-name> = identifier
 <function-name> = identifier
 
-run-command = DB DOT <'RUNCOMMAND'> LPAREN string RPAREN
+run-command = DB DOT <'RUNCOMMAND'> LPAREN literal RPAREN
 
 (* Common Definitions *)
 identifier = #'[a-zA-Z0-9_]+'

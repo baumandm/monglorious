@@ -2,6 +2,12 @@
 
 [https://docs.mongodb.com/v3.2/reference/mongo-shell/]()
 
+## Working Commands
+
+    db.runCommand("serverStatus")
+    db.runCommand("dbStats")
+    db.runCommand({ "collStats": "<collection name>"})
+
 ## Expected Syntax:
 
     show dbs
