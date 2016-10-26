@@ -31,17 +31,23 @@
   (fact "Monglorious executes serverStatus"
         (execute {} "testdb" "db.runCommand('serverStatus')") => is-ok?
         (execute {} "testdb" "db.runCommand('serverstatus')") => is-ok?
-        (execute {} "testdb" "db.runCommand(\"SERVERSTATUS\")") => is-ok?)
+        (execute {} "testdb" "db.runCommand(\"SERVERSTATUS\")") => is-ok?
+        (execute {} "testdb" "db.runCommand({serverStatus: 1})") => is-ok?)
 
   (fact "Monglorious executes dbStats"
         (execute {} "testdb" "db.runCommand('dbStats')") => is-ok?
-        (execute {} "testdb" "db.runCommand('dbstats')") => is-ok?)
+        (execute {} "testdb" "db.runCommand('dbstats')") => is-ok?
+        (execute {} "testdb" "db.runCommand({dbStats: 1})") => is-ok?)
 
   (fact "Monglorious executes collStats"
         (execute {} "testdb" "db.runCommand({collStats: 'unknownCollection'})") => is-not-ok?
         (execute {} "testdb" "db.runCommand({collStats: 'documents'})") => is-ok?
         (execute {} "testdb" "db.runCommand({'collStats': 'documents'})") => is-ok?
-        (execute {} "testdb" "db.runCommand({\"collStats\": \"documents\"})") => is-ok?))
+        (execute {} "testdb" "db.runCommand({\"collStats\": \"documents\"})") => is-ok?)
+
+  (fact "Monglorious executes whatsmyuri"
+        (execute {} "testdb" "db.runCommand('whatsmyuri')") => (just {"ok" 1.0 "you" string?})
+        (execute {} "testdb" "db.runCommand({whatsmyuri: 1})") => (just {"ok" 1.0 "you" string?})))
 
 ; Create some sample data before tests, delete after
 (against-background
@@ -64,4 +70,12 @@
   (fact "Monglorious executes show dbs"
         (execute {} "testdb" "show dbs") => (contains #{"testdb" "testdb2"} :gaps-ok)
         (execute {} "testdb" "SHOW DBS") => (contains #{"testdb" "testdb2"} :gaps-ok))
+
+  (fact "Monglorious executes show databases"
+        (execute {} "testdb" "show databases") => (contains #{"testdb" "testdb2"} :gaps-ok)
+        (execute {} "testdb" "SHOW DATABASES") => (contains #{"testdb" "testdb2"} :gaps-ok))
+
+  (fact "Monglorious executes show collections"
+        (execute {} "testdb" "show collections") => (just #{"documents"})
+        (execute {} "testdb2" "SHOW COLLECTIONS") => (just #{"secret-documents"}))
   )
