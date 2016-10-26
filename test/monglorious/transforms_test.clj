@@ -76,6 +76,6 @@
         (execute {} "testdb" "SHOW DATABASES") => (contains #{"testdb" "testdb2"} :gaps-ok))
 
   (fact "Monglorious executes show collections"
-        (execute {} "testdb" "show collections") => (just #{"documents"})
-        (execute {} "testdb2" "SHOW COLLECTIONS") => (just #{"secret-documents"}))
+        (execute {} "testdb" "show collections") => (contains #{"documents"})
+        (execute {} "testdb2" "SHOW COLLECTIONS") => (contains #{"secret-documents"}))
   )
