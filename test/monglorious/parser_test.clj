@@ -49,4 +49,8 @@
       (parse-query "db.runCommand('serverStatus')") => [:run-command "serverStatus"])
 
 (fact "Monglorious parses DB Collection commands"
-      (parse-query "db.fooCollection.count()") => [:collection-command "fooCollection" "count"])
+      (parse-query "db.fooCollection.count()") => [:collection-command "fooCollection" "count"]
+      (parse-query "db.fooCollection.find()") => [:collection-command "fooCollection" "find"]
+      (parse-query "db.fooCollection.find({name: 'xx'})") => [:collection-command "fooCollection" "find" {"name" "xx"}]
+      (parse-query "db.fooCollection.find({name: 'xx'}, {yy: false})") => [:collection-command "fooCollection" "find" {"name" "xx"} {"yy" false}]
+      (parse-query "db.fooCollection.find({name: { $eq: 'xx' }})") => [:collection-command "fooCollection" "find" {"name" { "$eq" "xx"}}])

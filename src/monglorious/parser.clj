@@ -73,4 +73,5 @@
        (insta-transform/transform
          {:run-command run-command-transform
           :show-command show-command-transform
+          :collection-command collection-command-transform
           })))

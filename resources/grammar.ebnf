@@ -17,7 +17,7 @@ collection-command = DB DOT collection-name DOT function-name LPAREN (literal (C
 run-command = DB DOT <'RUNCOMMAND'> LPAREN literal RPAREN
 
 (* Common Definitions *)
-identifier = #'[a-zA-Z0-9_]+'
+identifier = #'\$?[a-zA-Z0-9_]+'
 <literal> = string | number | map | list | boolean
 <string> = single-quoted-string | double-quoted-string
 single-quoted-string = #'(?s)\'\'|\'(?:.*?([^\\]|\\\\))?\''

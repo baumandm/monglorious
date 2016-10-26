@@ -1,5 +1,6 @@
 (ns monglorious.transforms
   (:require [monger.core :as mg]
+            [monger.collection :as mg-coll]
             [monger.command :as mg-cmd]
             [monger.conversion :refer [from-db-object]]
             [monger.db :as mg-db]))
@@ -36,3 +37,14 @@
     (fn [conn db] (into [] (mg-db/get-collection-names db)))
 
     (throw (Exception. "Unsupported database object."))))
+
+(defn collection-command-transform
+  [collection-name function-name & args]
+  (case (clojure.string/lower-case function-name)
+    "find"
+    (fn [_ db] (doall (apply (partial mg-coll/find-maps db collection-name) args)))
+    "findone"
+    (let [args (if (nil? args) [{}] args)]
+      (fn [_ db] (doall (apply (partial mg-coll/find-one-as-map db collection-name) args))))
+
+    (throw (Exception. "Unsupported collection function."))))
