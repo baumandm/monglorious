@@ -4,6 +4,12 @@ script: lein midje
 sudo: false
 services:
   - mongodb
+addons:
+  apt:
+    sources:
+    - mongodb-3.0-precise
+    packages:
+    - mongodb-org-server
 jdk:
   - openjdk7
   - oraclejdk8
