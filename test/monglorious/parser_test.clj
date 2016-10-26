@@ -37,12 +37,12 @@
       (parse-query "{x:{y:{z:1}}}" :literal) => [{"x" {"y" {"z" 1}}}])
 
 (fact "Monglorious parses SHOW ___ commands"
-      (parse-query "show dbs") => [:show-command [:dbs]]
-      (parse-query "show collections") => [:show-command [:collections]]
-      (parse-query "show users") => [:show-command [:users]]
-      (parse-query "show roles") => [:show-command [:roles]]
-      (parse-query "show profile") => [:show-command [:profile]]
-      (parse-query "show databases") => [:show-command [:databases]])
+      (parse-query "show dbs") => [:show-command :dbs]
+      (parse-query "show collections") => [:show-command :collections]
+      (parse-query "show users") => [:show-command :users]
+      (parse-query "show roles") => [:show-command :roles]
+      (parse-query "show profile") => [:show-command :profile]
+      (parse-query "show databases") => [:show-command :databases])
 
 (fact "Monglorious parses RunCommand commands"
       (parse-query "db.runCommand(\"foo\")") => [:run-command "foo"]

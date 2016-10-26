@@ -2,7 +2,7 @@
 query = show-command | run-command | collection-command
 
 show-command = <'SHOW'> db-object
-<db-object> = dbs | collections | users | roles | profile | databases
+db-object = dbs | collections | users | roles | profile | databases
 dbs = <'DBS'>
 collections = <'COLLECTIONS'>
 users = <'USERS'>

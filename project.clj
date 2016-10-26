@@ -13,6 +13,8 @@
   :main ^:skip-aot monglorious.core
   :target-path "target/%s"
 
-  :profiles {:dev {:dependencies [[midje "1.8.3"]]
+  :profiles {:dev {:dependencies [[midje "1.8.3"]
+                                  [org.slf4j/slf4j-nop "1.7.12"]]
                    :plugins [[lein-midje "3.2.1"]]}
+
              :uberjar {:aot :all}})

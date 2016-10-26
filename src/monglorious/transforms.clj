@@ -3,6 +3,7 @@
             [monger.command :as mg-cmd]
             [monger.conversion :refer [from-db-object]]))
 
+
 (defn run-command-transform
   [command]
   (let [command (if (string? command) (clojure.string/lower-case command) command)]
@@ -19,3 +20,10 @@
       :else
       (throw (Exception. "Unsupported database command.")))))
 
+(defn show-command-transform
+  [db-object]
+  (case db-object
+    :dbs
+    (fn [conn _] (into [] (mg/get-db-names conn)))
+
+    (throw (Exception. "Unsupported database object."))))

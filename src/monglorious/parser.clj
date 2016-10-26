@@ -45,16 +45,18 @@
                              (let [keys (take-nth 2 args)
                                    vals (take-nth 2 (rest args))]
                                (zipmap keys vals)))
+     :db-object            (fn [db-object] (first db-object))
      }
     tree))
 
 (defn parse-unsimplified
   "Parse a MongoDB query into an unsimplified expression tree."
-  [query start]
+  ([query] (parse-unsimplified query :query))
+  ([query start]
   (let [tree (monglorious-parser query :start start)]
     (if (insta/failure? tree)
       (throw (Exception. ^String (with-out-str (print tree))))
-      tree)))
+      tree))))
 
 (defn parse-query
   "Parses a MongoDB query and simplifies"
@@ -70,4 +72,5 @@
        (parse-query)
        (insta-transform/transform
          {:run-command run-command-transform
+          :show-command show-command-transform
           })))
