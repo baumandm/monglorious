@@ -26,8 +26,13 @@
 
 (defn execute
   "Connects and executes a MongoDB query, using a connection map or URI"
-  [connection-options-or-uri db-name query]
-  (let [connection (get-connection connection-options-or-uri db-name)
-        result (execute-with-connection connection query)]
-    (mg/disconnect (:conn connection))
-    result))
+  ([connection-options-or-uri db-name query]
+   (let [connection (get-connection connection-options-or-uri db-name)
+         result (execute-with-connection connection query)]
+     (mg/disconnect (:conn connection))
+     result))
+  ([connection-uri query]
+   (let [connection (get-connection connection-uri)
+         result (execute-with-connection connection query)]
+     (mg/disconnect (:conn connection))
+     result)))
