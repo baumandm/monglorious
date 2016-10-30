@@ -157,4 +157,11 @@
   (fact "Monglorious counts documents with filters"
         (execute {} "testdb" "db.documents.count({ child: true })") => 2
         (execute {} "testdb" "db.documents.COUNT({ name: 'Roxanne' })") => 0
-        (execute {} "testdb" "db.documents.count({ 'age': 32})") => 2))
+        (execute {} "testdb" "db.documents.count({ 'age': 32})") => 2)
+
+  (fact "Monglorious finds then counts documents"
+        (execute {} "testdb" "db.documents.find().count()") => 9
+        (execute {} "testdb" "db.documents.find({}, {}).count()") => 9
+        (execute {} "testdb" "db.documents.find({ child: true }).count()") => 2
+        (execute {} "testdb" "db.documents.FIND({ name: 'Roxanne' }).count()") => 0
+        (execute {} "testdb" "db.documents.find({ 'age': 32}).count()") => 2))

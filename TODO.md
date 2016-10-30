@@ -23,6 +23,6 @@
     db.<collection>.findOne(<query>)
     db.<collection>.count()
     
-## Expected Syntax:
-    
     db.<collection>.find(<query>).count()
+
+    

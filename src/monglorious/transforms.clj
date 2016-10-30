@@ -6,8 +6,12 @@
             [monger.db :as mg-db]
             [clojure.string :refer [lower-case]]))
 
+;; Transformers that convert the parsed query tree into applicable functions.
+;; Each transformer returns a function that takes (conn db),
+;; executes the specified query, and returns the result.
 
 (defn run-command-transform
+  "Transform a run command into a function that takes (conn db) and returns a result."
   [command]
   (let [command (if (string? command) (clojure.string/lower-case command) command)]
     (cond
@@ -28,6 +32,7 @@
       (throw (Exception. "Unsupported database command.")))))
 
 (defn show-command-transform
+  "Transform a show __ command into a function that takes (conn db) and returns a result."
   [db-object]
   (case db-object
     :dbs
@@ -40,8 +45,10 @@
     (throw (Exception. "Unsupported database object."))))
 
 (defn collection-command-transform
-  "Handle"
-  [collection-name & function-applications] ;;function-name & args]
+  "Transform a db collection command into a function that takes (conn db) and returns a result."
+  [collection-name & function-applications]
+  ;; Handle based on number of functions chained together
+  ;; Need to consider the entire chain, vs executing each one in order
   (case (count function-applications)
     ;; One function
     1 (let [function-application (first function-applications)
@@ -59,4 +66,9 @@
         (let [conditions (if (empty? args) {} (first args))]
           (fn [_ db] (mg-coll/count db collection-name conditions)))
 
-        (throw (Exception. (format "Unsupported function: %s." function-name)))))))
+        (throw (Exception. (format "Unsupported function: %s." function-name)))))
+
+    2 (let [function-names (map #(lower-case (first %)) function-applications)
+            function-args (map rest function-applications)]
+        (case function-names
+          ["find" "count"] (collection-command-transform collection-name (into ["count"] (first function-args)))))))
