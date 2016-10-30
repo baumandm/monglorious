@@ -43,8 +43,13 @@
   (case (clojure.string/lower-case function-name)
     "find"
     (fn [_ db] (doall (apply (partial mg-coll/find-maps db collection-name) args)))
+
     "findone"
     (let [args (if (nil? args) [{}] args)]
       (fn [_ db] (doall (apply (partial mg-coll/find-one-as-map db collection-name) args))))
 
-    (throw (Exception. "Unsupported collection function."))))
+    "count"
+    (let [conditions (if (nil? args) {} (first args))]
+      (fn [_ db] (mg-coll/count db collection-name conditions)))
+
+    (throw (Exception. (format "Unsupported function: %s." function-name)))))

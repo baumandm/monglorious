@@ -104,8 +104,8 @@
 
   (fact "Monglorious finds documents without any filters"
         (execute {} "testdb" "db.documents.find()") => #(and (coll? %) (= 9 (count %)))
-        (execute {} "testdb" "db.documents.find({})") => #(and (coll? %) (= 9 (count %)))
-        (execute {} "testdb" "db.documents.FIND()") => #(and (coll? %) (= 9 (count %))))
+        (execute {} "testdb" "db.documents.FIND()") => #(and (coll? %) (= 9 (count %)))
+        (execute {} "testdb" "db.documents.find({})") => #(and (coll? %) (= 9 (count %))))
 
   (fact "Monglorious finds documents without any filters and projections"
         (execute {} "testdb" "db.documents.find({}, { score: 0 })") => #(and (coll? %)
@@ -135,8 +135,8 @@
 
   (fact "Monglorious finds one document without any filters"
         (execute {} "testdb" "db.documents.findOne()") => #(and (map? %) (contains? % :name))
-        (execute {} "testdb" "db.documents.findOne({})") => #(and (map? %) (contains? % :name))
-        (execute {} "testdb" "db.documents.FINDONE()") => #(and (map? %) (contains? % :name)))
+        (execute {} "testdb" "db.documents.FINDONE()") => #(and (map? %) (contains? % :name))
+        (execute {} "testdb" "db.documents.findOne({})") => #(and (map? %) (contains? % :name)))
 
   (fact "Monglorious finds one document with filters"
         (execute {} "testdb" "db.documents.findOne({ name: 'Alan' })") => #(and (map? %) (= "Alan" (:name %)))
@@ -149,5 +149,12 @@
         (execute {} "testdb" "db.documents.findOne({}, { name: 0, score: 0 })") => #(and (map %) (not (contains? % :name)) (not (contains? % :score)))
         (execute {} "testdb" "db.documents.findOne({}, { name: 0, score: 1 })") => (throws MongoQueryException))
 
+  (fact "Monglorious counts documents without any filters"
+        (execute {} "testdb" "db.documents.count()") => 9
+        (execute {} "testdb" "db.documents.COUNT()") => 9
+        (execute {} "testdb" "db.documents.count({})") => 9)
 
-  )
+  (fact "Monglorious counts documents with filters"
+        (execute {} "testdb" "db.documents.count({ child: true })") => 2
+        (execute {} "testdb" "db.documents.COUNT({ name: 'Roxanne' })") => 0
+        (execute {} "testdb" "db.documents.count({ 'age': 32})") => 2))
