@@ -10,8 +10,9 @@ roles = <'ROLES'>
 profile = <'PROFILE'>
 databases = <'DATABASES'>
 
-collection-command = DB DOT collection-name DOT function-name LPAREN (literal (COMMA literal)*)? RPAREN
+collection-command = DB DOT collection-name function-application+
 <collection-name> = identifier
+function-application = DOT function-name LPAREN (literal (COMMA literal)*)? RPAREN
 <function-name> = identifier
 
 run-command = DB DOT <'RUNCOMMAND'> LPAREN literal RPAREN

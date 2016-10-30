@@ -46,6 +46,7 @@
                                    vals (take-nth 2 (rest args))]
                                (zipmap keys vals)))
      :db-object            (fn [db-object] (first db-object))
+     :function-application  (fn [& args] (into [] args))
      }
     tree))
 

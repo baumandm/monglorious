@@ -3,7 +3,8 @@
             [monger.collection :as mg-coll]
             [monger.command :as mg-cmd]
             [monger.conversion :refer [from-db-object]]
-            [monger.db :as mg-db]))
+            [monger.db :as mg-db]
+            [clojure.string :refer [lower-case]]))
 
 
 (defn run-command-transform
@@ -39,17 +40,23 @@
     (throw (Exception. "Unsupported database object."))))
 
 (defn collection-command-transform
-  [collection-name function-name & args]
-  (case (clojure.string/lower-case function-name)
-    "find"
-    (fn [_ db] (doall (apply (partial mg-coll/find-maps db collection-name) args)))
+  "Handle"
+  [collection-name & function-applications] ;;function-name & args]
+  (case (count function-applications)
+    ;; One function
+    1 (let [function-application (first function-applications)
+            function-name (lower-case (first function-application))
+            args (rest function-application)]
+      (case function-name
+        "find"
+        (fn [_ db] (doall (apply (partial mg-coll/find-maps db collection-name) args)))
 
-    "findone"
-    (let [args (if (nil? args) [{}] args)]
-      (fn [_ db] (doall (apply (partial mg-coll/find-one-as-map db collection-name) args))))
+        "findone"
+        (let [args (if (empty? args) [{}] args)]
+          (fn [_ db] (doall (apply (partial mg-coll/find-one-as-map db collection-name) args))))
 
-    "count"
-    (let [conditions (if (nil? args) {} (first args))]
-      (fn [_ db] (mg-coll/count db collection-name conditions)))
+        "count"
+        (let [conditions (if (empty? args) {} (first args))]
+          (fn [_ db] (mg-coll/count db collection-name conditions)))
 
-    (throw (Exception. (format "Unsupported function: %s." function-name)))))
+        (throw (Exception. (format "Unsupported function: %s." function-name)))))))
