@@ -133,9 +133,9 @@
         (execute {} "testdb" "db.documents.findOne({ child: true })") => #(and (map? %) (= "Xavier" (:name %))))
 
   (fact "Monglorious finds one document with projections"
-        (execute {} "testdb" "db.documents.findOne({}, { score: 0 })") => #(and (map %) (not (contains? % :score)))
-        (execute {} "testdb" "db.documents.findOne({}, { name: 1, score: 1 })") => #(and (map %) (contains? % :score) (contains? % :name))
-        (execute {} "testdb" "db.documents.findOne({}, { name: 0, score: 0 })") => #(and (map %) (not (contains? % :name)) (not (contains? % :score)))
+        (execute {} "testdb" "db.documents.findOne({}, { score: 0 })") => #(and (map? %) (not (contains? % :score)))
+        (execute {} "testdb" "db.documents.findOne({}, { name: 1, score: 1 })") => #(and (map? %) (contains? % :score) (contains? % :name))
+        (execute {} "testdb" "db.documents.findOne({}, { name: 0, score: 0 })") => #(and (map? %) (not (contains? % :name)) (not (contains? % :score)))
         (execute {} "testdb" "db.documents.findOne({}, { name: 0, score: 1 })") => (throws MongoQueryException))
 
   (fact "Monglorious counts documents without any filters"
@@ -153,4 +153,9 @@
         (execute {} "testdb" "db.documents.find({}, {}).count()") => 9
         (execute {} "testdb" "db.documents.find({ child: true }).count()") => 2
         (execute {} "testdb" "db.documents.FIND({ name: 'Roxanne' }).count()") => 0
-        (execute {} "testdb" "db.documents.find({ 'age': 32}).count()") => 2))
+        (execute {} "testdb" "db.documents.find({ 'age': 32}).count()") => 2)
+
+  (fact "Monglorious finds then limits documents"
+        (execute {} "testdb" "db.documents.find().limit(0)") => #(and (coll? %) (= 9 (count %)))
+        (execute {} "testdb" "db.documents.find().limit(1)") => #(and (coll? %) (= 1 (count %)))
+        (execute {} "testdb" "db.documents.find().limit(4)") => #(and (coll? %) (= 4 (count %)))))

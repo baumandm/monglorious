@@ -4,7 +4,8 @@
             [instaparse.transform :as insta-transform]
             [monger.core :as mg]
             [monger.command :as mg-cmd]
-            [monger.conversion :refer [from-db-object]])
+            [monger.conversion :refer [from-db-object]]
+            [clojure.string :refer [lower-case]])
   (:import (org.apache.commons.lang3 StringEscapeUtils)))
 
 (def ^{:private true} whitespace
@@ -46,7 +47,7 @@
                                    vals (take-nth 2 (rest args))]
                                (zipmap keys vals)))
      :db-object            (fn [db-object] (first db-object))
-     :function-application  (fn [& args] (into [] args))
+     :function-application (fn [name & args] (into [(lower-case name)] args))
      }
     tree))
 
@@ -54,10 +55,10 @@
   "Parse a MongoDB query into an unsimplified expression tree."
   ([query] (parse-unsimplified query :query))
   ([query start]
-  (let [tree (monglorious-parser query :start start)]
-    (if (insta/failure? tree)
-      (throw (Exception. ^String (with-out-str (print tree))))
-      tree))))
+   (let [tree (monglorious-parser query :start start)]
+     (if (insta/failure? tree)
+       (throw (Exception. ^String (with-out-str (print tree))))
+       tree))))
 
 (defn parse-query
   "Parses a MongoDB query and simplifies"
@@ -72,7 +73,7 @@
   (->> query
        (parse-query)
        (insta-transform/transform
-         {:run-command run-command-transform
-          :show-command show-command-transform
+         {:run-command        run-command-transform
+          :show-command       show-command-transform
           :collection-command collection-command-transform
           })))

@@ -4,6 +4,7 @@
             [monger.command :as mg-cmd]
             [monger.conversion :refer [from-db-object]]
             [monger.db :as mg-db]
+            [monger.query :as mg-q]
             [clojure.string :refer [lower-case]]))
 
 ;; Transformers that convert the parsed query tree into applicable functions.
@@ -49,11 +50,11 @@
   [collection-name & function-applications]
   ;; Handle based on number of functions chained together
   ;; Need to consider the entire chain, vs executing each one in order
-  (case (count function-applications)
+  (if (= 1 (count function-applications))
     ;; One function
-    1 (let [function-application (first function-applications)
-            function-name (lower-case (first function-application))
-            args (rest function-application)]
+    (let [function-application (first function-applications)
+          function-name (first function-application)
+          args (rest function-application)]
       (case function-name
         "find"
         (fn [_ db] (doall (apply (partial mg-coll/find-maps db collection-name) args)))
@@ -68,7 +69,22 @@
 
         (throw (Exception. (format "Unsupported function: %s." function-name)))))
 
-    2 (let [function-names (map #(lower-case (first %)) function-applications)
-            function-args (map rest function-applications)]
-        (case function-names
-          ["find" "count"] (collection-command-transform collection-name (into ["count"] (first function-args)))))))
+    ;; More than one function
+    (let [function-names (map #(first %) function-applications)
+          function-args (map rest function-applications)]
+      (cond
+
+        ;; Special case .find().count()
+        (= function-names ["find" "count"])
+        (collection-command-transform collection-name (into ["count"] (first function-args)))
+
+        ;;:else
+        ;;(let [query (loop [fns function-applications
+        ;;                   query {}]
+        ;;              ...))])
+        (= function-names ["find" "limit"])
+        (fn [_ db]
+          (doall (mg-q/with-collection
+                   db collection-name
+                   (mg-q/find (first (first function-args)))
+                   (mg-q/limit (first (nth function-args 1))))))))))
