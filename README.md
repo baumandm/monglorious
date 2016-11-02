@@ -25,7 +25,7 @@ Java bindings are on the roadmap.
 
 Add the following dependency to your project.clj file:
 
-**Clojars TBD**
+[![](https://clojars.org/monglorious/latest-version.svg)](https://clojars.org/monglorious)
 
 ### Running Tests
 
