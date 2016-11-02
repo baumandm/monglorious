@@ -37,11 +37,11 @@
   [db-object]
   (case db-object
     :dbs
-    (fn [conn _] (into [] (mg/get-db-names conn)))
+    (fn [conn _] (vec (mg/get-db-names conn)))
     :databases
-    (fn [conn _] (into [] (mg/get-db-names conn)))
+    (fn [conn _] (vec (mg/get-db-names conn)))
     :collections
-    (fn [conn db] (into [] (mg-db/get-collection-names db)))
+    (fn [conn db] (vec (mg-db/get-collection-names db)))
 
     (throw (Exception. "Unsupported database object."))))
 
@@ -70,7 +70,7 @@
         (throw (Exception. (format "Unsupported function: %s." function-name)))))
 
     ;; More than one function
-    (let [function-names (map #(first %) function-applications)
+    (let [function-names (map first function-applications)
           function-args (map rest function-applications)]
       (cond
 
@@ -86,5 +86,5 @@
         (fn [_ db]
           (doall (mg-q/with-collection
                    db collection-name
-                   (mg-q/find (first (first function-args)))
+                   (mg-q/find (ffirst function-args))
                    (mg-q/limit (first (nth function-args 1))))))))))
