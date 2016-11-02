@@ -21,4 +21,17 @@
                              [lein-kibit "0.1.2"]
                              [jonase/eastwood "0.2.3"]]}
 
-             :uberjar {:aot :all}})
+             :uberjar {:aot :all}}
+
+  :release-tasks [["vcs" "assert-committed"]
+                  ["clean"]
+                  ["kibit"]
+                  ["midje"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag"]
+                  ["deploy" "clojars"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]]
+
+  :deploy-repositories [["releases" :clojars]])
