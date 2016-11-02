@@ -24,5 +24,7 @@
     db.<collection>.count()
     
     db.<collection>.find(<query>).count()
+    
+    db.<collection.find().sort().skip().limit()
 
     

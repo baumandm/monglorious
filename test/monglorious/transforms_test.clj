@@ -122,6 +122,10 @@
         (execute {} "testdb" "db.documents.find({ age: 18 })") => #(and (coll? %) (= 2 (count %)))
         (execute {} "testdb" "db.documents.find({ score: 100, child: true })") => #(and (coll? %) (= 1 (count %)) (= "Zoey" (:name (first %)))))
 
+  (fact "Monglorious finds documents with complex filters"
+        (execute {} "testdb" "db.documents.find({ child: { $ne: true }})") => #(and (coll? %) (= 7 (count %)))
+        (execute {} "testdb" "db.documents.find({ name: { $in: ['Anna', 'Bartleby', 'Xavier', 'Zoey'] }})") => #(and (coll? %) (= 3 (count %))))
+
   (fact "Monglorious finds one document without any filters"
         (execute {} "testdb" "db.documents.findOne()") => #(and (map? %) (contains? % :name))
         (execute {} "testdb" "db.documents.FINDONE()") => #(and (map? %) (contains? % :name))
@@ -158,4 +162,25 @@
   (fact "Monglorious finds then limits documents"
         (execute {} "testdb" "db.documents.find().limit(0)") => #(and (coll? %) (= 9 (count %)))
         (execute {} "testdb" "db.documents.find().limit(1)") => #(and (coll? %) (= 1 (count %)))
-        (execute {} "testdb" "db.documents.find().limit(4)") => #(and (coll? %) (= 4 (count %)))))
+        (execute {} "testdb" "db.documents.find().limit(4)") => #(and (coll? %) (= 4 (count %)))
+        (execute {} "testdb" "db.documents.limit(5).find({})") => #(and (coll? %) (= 5 (count %))))
+
+  (fact "Monglorious finds, projects, then limits documents"
+        (execute {} "testdb" "db.documents.find({}, { score: 0 }).limit(3)") => #(and (coll? %)
+                                                                                      (= 3 (count %))
+                                                                                      (not-any? (fn [doc] (contains? doc :score)) %))
+        (execute {} "testdb" "db.documents.find({ child: true }, { score: 0 }).limit(3)") => #(and (coll? %)
+                                                                                      (= 2 (count %))
+                                                                                      (not-any? (fn [doc] (contains? doc :score)) %)))
+
+  (fact "Monglorious finds then sorts documents"
+        (execute {} "testdb" "db.documents.find().sort({name: 1})") => #(and (coll? %) (= 9 (count %)) (= "Alan" (:name (first %))))
+        (execute {} "testdb" "db.documents.find().sort({name: -1})") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %)))))
+
+  (fact "Monglorious finds then skips then limits documents"
+        (execute {} "testdb" "db.documents.find().skip(1).limit(1)") => #(and (coll? %) (= 1 (count %)))
+        (execute {} "testdb" "db.documents.find().limit(2).skip(2)") => #(and (coll? %) (= 2 (count %))))
+
+  (fact "Monglorious finds then sorts then skips then limits documents"
+        (execute {} "testdb" "db.documents.find().sort({name: 1}).skip(1).limit(1)") => #(and (coll? %) (= 1 (count %)) (= "Anna" (:name (first %))))
+        (execute {} "testdb" "db.documents.find().sort({name: -1}).limit(2).skip(2)") => #(and (coll? %) (= 2 (count %)) (= "Teresa" (:name (first %))))))

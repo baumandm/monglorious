@@ -5,7 +5,8 @@
             [monger.conversion :refer [from-db-object]]
             [monger.db :as mg-db]
             [monger.query :as mg-q]
-            [clojure.string :refer [lower-case]]))
+            [clojure.string :refer [lower-case]])
+  (:import (com.mongodb DB)))
 
 ;; Transformers that convert the parsed query tree into applicable functions.
 ;; Each transformer returns a function that takes (conn db),
@@ -78,13 +79,23 @@
         (= function-names ["find" "count"])
         (collection-command-transform collection-name (into ["count"] (first function-args)))
 
-        ;;:else
-        ;;(let [query (loop [fns function-applications
-        ;;                   query {}]
-        ;;              ...))])
-        (= function-names ["find" "limit"])
-        (fn [_ db]
-          (doall (mg-q/with-collection
-                   db collection-name
-                   (mg-q/find (ffirst function-args))
-                   (mg-q/limit (first (nth function-args 1))))))))))
+        :else
+        (fn [_ ^DB db]
+          (let [query (loop [fns function-applications
+                           query (mg-q/empty-query (.getCollection db collection-name))]
+                      (let [fn (first fns)
+                            function-name (first fn)
+                            first-arg (first (rest fn))
+                            query (case function-name
+                                    "find" (if (= 3 (count fn))
+                                                  (-> query
+                                                      (mg-q/find (or first-arg {}))
+                                                      (mg-q/fields (nth fn 2)))
+                                                  (mg-q/find query (or first-arg {})))
+                                    "sort" (mg-q/sort query first-arg)
+                                    "skip" (mg-q/skip query first-arg)
+                                    "limit" (mg-q/limit query first-arg))]
+                        (if (= 1 (count fns))
+                          query
+                          (recur (rest fns) query))))]
+          (doall (mg-q/exec query))))))))
