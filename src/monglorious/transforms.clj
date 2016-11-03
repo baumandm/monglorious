@@ -6,7 +6,7 @@
             [monger.db :as mg-db]
             [monger.query :as mg-q]
             [clojure.string :refer [lower-case]])
-  (:import (com.mongodb DB)))
+  (:import (com.mongodb DB MongoQueryException)))
 
 ;; Transformers that convert the parsed query tree into applicable functions.
 ;; Each transformer returns a function that takes (conn db),
@@ -94,7 +94,9 @@
                                                   (mg-q/find query (or first-arg {})))
                                     "sort" (mg-q/sort query first-arg)
                                     "skip" (mg-q/skip query first-arg)
-                                    "limit" (mg-q/limit query first-arg))]
+                                    "limit" (mg-q/limit query first-arg)
+                                    ;; else
+                                    (throw (MongoQueryException. (.getAddress (.getMongo db)) -1 (format "%s() is not a function" function-name))))]
                         (if (= 1 (count fns))
                           query
                           (recur (rest fns) query))))]

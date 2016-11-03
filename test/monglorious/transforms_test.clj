@@ -183,4 +183,8 @@
 
   (fact "Monglorious finds then sorts then skips then limits documents"
         (execute {} "testdb" "db.documents.find().sort({name: 1}).skip(1).limit(1)") => #(and (coll? %) (= 1 (count %)) (= "Anna" (:name (first %))))
-        (execute {} "testdb" "db.documents.find().sort({name: -1}).limit(2).skip(2)") => #(and (coll? %) (= 2 (count %)) (= "Teresa" (:name (first %))))))
+        (execute {} "testdb" "db.documents.find().sort({name: -1}).limit(2).skip(2)") => #(and (coll? %) (= 2 (count %)) (= "Teresa" (:name (first %)))))
+
+  (fact "Monglorious finds then tries unknown functions"
+        (execute {} "testdb" "db.documents.find().foo()") => (throws MongoQueryException)
+        (execute {} "testdb" "db.documents.find().head({}).sort({name: -1})") => (throws MongoQueryException)))

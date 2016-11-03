@@ -33,6 +33,4 @@
                   ["deploy" "clojars"]
                   ["change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]]
-
-  :deploy-repositories [["clojars" {:url "https://clojars.org/monglorious"
-                              :creds :gpg}]])
+  )
