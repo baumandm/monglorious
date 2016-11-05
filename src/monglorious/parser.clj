@@ -13,7 +13,7 @@
     "whitespace = #'\\s+'"))
 
 (def monglorious-parser
-  (time (insta/parser (clojure.java.io/resource "grammar.ebnf")
+  (time (insta/parser (clojure.java.io/resource "monglorious-grammar.ebnf")
                       :string-ci true
                       :auto-whitespace whitespace)))
 

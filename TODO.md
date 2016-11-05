@@ -2,6 +2,11 @@
 
 [https://docs.mongodb.com/v3.2/reference/mongo-shell/]()
 
+- Add ObjectId() support for find().
+- Regex queries: 
+    - Tests for regex by string (already works)
+    - Support for /regex/ literals  
+
 ## Working Commands
 
     show dbs

@@ -1,4 +1,4 @@
-(defproject monglorious "0.2.0"
+(defproject monglorious "0.2.1"
   :author "Dave Bauman"
   :description "Query MongoDB using strings!"
   :url "https://github.com/baumandm/monglorious"
@@ -11,7 +11,6 @@
                  [com.novemberain/monger "3.1.0"]
                  [org.clojars.frozenlock/commons-lang "3.3.0"]]
 
-  :main ^:skip-aot monglorious.core
   :target-path "target/%s"
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
 
