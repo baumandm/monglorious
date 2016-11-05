@@ -77,7 +77,7 @@
            (let [conn (mg/connect)
                  db (mg/get-db conn "testdb")]
              (mc/remove db "documents")
-             (mc/insert-batch db "documents" [{:name "Alan" :age 27 :score 17772}
+             (mc/insert-batch db "documents" [{:name "Alan" :age 27 :score 17772 :_id (monger.util/object-id "581d36e347aee26883830000")}
                                               {:name "Joe" :age 32 :score 8277}
                                               {:name "Teresa" :age 31 :score 495044}
                                               {:name "Macy" :age 29 :score 8837777}
@@ -121,6 +121,9 @@
   (fact "Monglorious finds documents with numerical filters"
         (execute {} "testdb" "db.documents.find({ age: 18 })") => #(and (coll? %) (= 2 (count %)))
         (execute {} "testdb" "db.documents.find({ score: 100, child: true })") => #(and (coll? %) (= 1 (count %)) (= "Zoey" (:name (first %)))))
+
+  (fact "Monglorious finds documents with ObjectId filters"
+        (execute {} "testdb" "db.documents.find({ _id: ObjectId('581d36e347aee26883830000') })") => #(and (coll? %) (= 1 (count %)) (= "Alan" (:name (first %)))))
 
   (fact "Monglorious finds documents with complex filters"
         (execute {} "testdb" "db.documents.find({ child: { $ne: true }})") => #(and (coll? %) (= 7 (count %)))

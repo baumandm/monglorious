@@ -36,6 +36,10 @@
       (parse-query "{x:[1,2,3],y:{a:\"b\"}}" :literal) => [{"x" [1 2 3] "y" { "a" "b"}}]
       (parse-query "{x:{y:{z:1}}}" :literal) => [{"x" {"y" {"z" 1}}}])
 
+(fact "Monglorious parses ObjectIds"
+      (parse-query "ObjectId('581d36e347aee26883837eb7')" :literal) => [(monger.util/object-id "581d36e347aee26883837eb7")]
+      (parse-query "ObjectId(\"581d36e347aee26883837eb7\")" :literal) => [(monger.util/object-id "581d36e347aee26883837eb7")])
+
 (fact "Monglorious parses SHOW ___ commands"
       (parse-query "show dbs") => [:show-command :dbs]
       (parse-query "show collections") => [:show-command :collections]

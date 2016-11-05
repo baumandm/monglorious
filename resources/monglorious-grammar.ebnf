@@ -10,25 +10,25 @@ roles = <'ROLES'>
 profile = <'PROFILE'>
 databases = <'DATABASES'>
 
-collection-command = DB DOT collection-name function-application+
+collection-command = DB DOT collection-name (DOT function-application)+
 <collection-name> = identifier
-function-application = DOT function-name LPAREN (literal (COMMA literal)*)? RPAREN
+function-application = function-name LPAREN (literal (COMMA literal)*)? RPAREN
 <function-name> = identifier
 
 run-command = DB DOT <'RUNCOMMAND'> LPAREN literal RPAREN
 
 (* Common Definitions *)
 identifier = #'\$?[a-zA-Z0-9_]+'
-<literal> = string | number | map | list | boolean
+<literal> = string | number | map | list | boolean | objectid
 <string> = single-quoted-string | double-quoted-string
 single-quoted-string = #'(?s)\'\'|\'(?:.*?([^\\]|\\\\))?\''
 double-quoted-string = #'(?s)\"\"|\"(?:.*?([^\\]|\\\\))\"'
 number = #'[-+]?(0(\.\d*)?|([1-9]\d*\.?\d*)|(\.\d+))([Ee][+-]?\d+)?'
-
 list = <'['> (literal (COMMA literal)*)? <']'>
 map = <'{'> (map-item (COMMA map-item)*)? <'}'>
 <map-item> = (identifier | string) <':'> literal
 boolean = TRUE | FALSE
+objectid = <'objectid'> LPAREN string RPAREN
 
 <DB> = <'DB'>
 <DOT> = <'.'>

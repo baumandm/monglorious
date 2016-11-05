@@ -46,6 +46,9 @@
                              (let [keys (take-nth 2 args)
                                    vals (take-nth 2 (rest args))]
                                (zipmap keys vals)))
+     :objectid             (fn [value] (if (nil? value)
+                                         (monger.util/object-id)
+                                         (monger.util/object-id value)))
      :db-object            (fn [db-object] (first db-object))
      :function-application (fn [name & args] (into [(lower-case name)] args))
      }

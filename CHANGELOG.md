@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.0
+
+- Add ObjectId() support
+
 ## 0.2.1
 
 - Renamed grammar file to avoid potential conflicts
