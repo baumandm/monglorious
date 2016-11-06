@@ -1,6 +1,6 @@
 # Monglorious!
 
-Monglorious is a MongoDB client library which forgoes a programmatic DSL and 
+Monglorious is a MongoDB client library which 
 accepts textual queries in the syntax of the MongoDB shell. 
 
 Monglorious is written in Clojure.
@@ -15,17 +15,17 @@ Monglorious is written in Clojure.
     (execute "mongodb://localhost:27017/testdb" "db.documents.find({ name: 'Alan' })")
     => ({:_id #object[org.bson.types.ObjectId 0x7acd5871 "5815c9d9b160550f0eab8868"], :name "Alan", :age 27, :score 17772})
 
-## Under Development
-
-This library is in fledgeling development mode.  Stay tuned for updates.
-
-Java bindings are on the roadmap.
-
 ## Installation
 
 Add the following dependency to your project.clj file:
 
 [![](https://clojars.org/monglorious/latest-version.svg)](https://clojars.org/monglorious)
+
+## Under Development
+
+This library is in fledgeling development mode.  Stay tuned for updates.
+
+Java bindings are on the roadmap.
 
 ### Running Tests
 
