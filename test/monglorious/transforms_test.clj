@@ -126,7 +126,13 @@
         (execute {} "testdb" "db.documents.find({ _id: ObjectId('581d36e347aee26883830000') })") => #(and (coll? %) (= 1 (count %)) (= "Alan" (:name (first %)))))
 
   (fact "Monglorious finds documents with complex filters"
+        (execute {} "testdb" "db.documents.find({ name: { $eq: 'Anna' }})") => #(and (coll? %) (= 1 (count %)) (= "Anna" (:name (first %))))
+        (execute {} "testdb" "db.documents.find({ name: { $ne: 'Anna' }})") => #(and (coll? %) (= 8 (count %)) (not-any? (fn [doc] (= "Anna" (:name doc))) %))
         (execute {} "testdb" "db.documents.find({ child: { $ne: true }})") => #(and (coll? %) (= 7 (count %)))
+        (execute {} "testdb" "db.documents.find({ age: { $gt: 30 }})") => #(and (coll? %) (= 3 (count %)) (every? (fn [doc] (> (:age doc) 30)) %))
+        (execute {} "testdb" "db.documents.find({ age: { $gte: 29 }})") => #(and (coll? %) (= 4 (count %)) (every? (fn [doc] (>= (:age doc) 29)) %))
+        (execute {} "testdb" "db.documents.find({ age: { $lt: 18 }})") => #(and (coll? %) (= 2 (count %)) (every? (fn [doc] (< (:age doc) 18)) %))
+        (execute {} "testdb" "db.documents.find({ age: { $lte: 18 }})") => #(and (coll? %) (= 4 (count %)) (every? (fn [doc] (<= (:age doc) 18)) %))
         (execute {} "testdb" "db.documents.find({ name: { $in: ['Anna', 'Bartleby', 'Xavier', 'Zoey'] }})") => #(and (coll? %) (= 3 (count %))))
 
   (fact "Monglorious finds one document without any filters"
