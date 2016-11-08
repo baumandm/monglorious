@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.4.0
+
+- Add regex support to db.collection.find()
+- Add db.collection.stats(), dataSize(), storageSize(), totalIndexSize(), getIndexes(),
+- Add db.collection.find().batchSize()
+
 ## 0.3.0
 
 - Add ObjectId() support
