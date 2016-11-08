@@ -91,6 +91,21 @@
    ;         (mg/drop-db conn "testdb")))]
    ]
 
+  (fact "Monglorious gets collection stats"
+        (execute {} "testdb" "db.documents.stats()") => is-ok?)
+
+  (fact "Monglorious gets collection data size"
+        (execute {} "testdb" "db.documents.dataSize()") => number?)
+
+  (fact "Monglorious gets collection storage size"
+        (execute {} "testdb" "db.documents.storageSize()") => number?)
+
+  (fact "Monglorious gets collection total index size"
+        (execute {} "testdb" "db.documents.totalIndexSize()") => number?)
+
+  (fact "Monglorious gets collection indexes"
+        (execute {} "testdb" "db.documents.getIndexes()") => #(and (coll? %) (every? map? %) (every? (fn [i] (contains? i :v)) %)))
+
   (fact "Monglorious finds documents without any filters"
         (execute {} "testdb" "db.documents.find()") => #(and (coll? %) (= 9 (count %)))
         (execute {} "testdb" "db.documents.FIND()") => #(and (coll? %) (= 9 (count %)))

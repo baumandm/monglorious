@@ -68,6 +68,21 @@
         (let [conditions (if (empty? args) {} (first args))]
           (fn [_ db] (mg-coll/count db collection-name conditions)))
 
+        "stats"
+        (fn [_ db] (mg-cmd/collection-stats db collection-name))
+
+        "datasize"
+        (fn [_ db] (get (mg-cmd/collection-stats db collection-name) "size"))
+
+        "storagesize"
+        (fn [_ db] (get (mg-cmd/collection-stats db collection-name) "storageSize"))
+
+        "totalindexsize"
+        (fn [_ db] (get (mg-cmd/collection-stats db collection-name) "totalIndexSize"))
+
+        "getindexes"
+        (fn [_ db] (mg-coll/indexes-on db collection-name))
+
         (throw (Exception. (format "Unsupported function: %s." function-name)))))
 
     ;; More than one function
