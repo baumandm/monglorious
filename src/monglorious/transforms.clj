@@ -95,6 +95,7 @@
                                     "sort" (mg-q/sort query first-arg)
                                     "skip" (mg-q/skip query first-arg)
                                     "limit" (mg-q/limit query first-arg)
+                                    "batchsize" (mg-q/batch-size query first-arg)
                                     ;; else
                                     (throw (MongoQueryException. (.getAddress (.getMongo db)) -1 (format "%s() is not a function" function-name))))]
                         (if (= 1 (count fns))

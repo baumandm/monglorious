@@ -208,7 +208,12 @@
 
   (fact "Monglorious finds then sorts documents"
         (execute {} "testdb" "db.documents.find().sort({name: 1})") => #(and (coll? %) (= 9 (count %)) (= "Alan" (:name (first %))))
-        (execute {} "testdb" "db.documents.find().sort({name: -1})") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %)))))
+        (execute {} "testdb" "db.documents.find().sort({name: -1})") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %))))
+        (execute {} "testdb" "db.documents.find({}, { age: 0, score: 0 }).sort({name: -1})") => #(and (coll? %)
+                                                                                                      (= 9 (count %))
+                                                                                                      (not-any? (fn [doc] (contains? doc :age)) %)
+                                                                                                      (not-any? (fn [doc] (contains? doc :score)) %)
+                                                                                                      (= "Zoey" (:name (first %)))))
 
   (fact "Monglorious finds then skips then limits documents"
         (execute {} "testdb" "db.documents.find().skip(1).limit(1)") => #(and (coll? %) (= 1 (count %)))
@@ -217,6 +222,10 @@
   (fact "Monglorious finds then sorts then skips then limits documents"
         (execute {} "testdb" "db.documents.find().sort({name: 1}).skip(1).limit(1)") => #(and (coll? %) (= 1 (count %)) (= "Anna" (:name (first %))))
         (execute {} "testdb" "db.documents.find().sort({name: -1}).limit(2).skip(2)") => #(and (coll? %) (= 2 (count %)) (= "Teresa" (:name (first %)))))
+
+  (fact "Monglorious finds then sorts then skips then limits documents with a batch size"
+        (execute {} "testdb" "db.documents.find().sort({name: 1}).skip(1).limit(1).batchSize(10)") => #(and (coll? %) (= 1 (count %)) (= "Anna" (:name (first %))))
+        (execute {} "testdb" "db.documents.find().sort({name: -1}).limit(2).skip(2).batchSize(5)") => #(and (coll? %) (= 2 (count %)) (= "Teresa" (:name (first %)))))
 
   (fact "Monglorious finds then tries unknown functions"
         (execute {} "testdb" "db.documents.find().foo()") => (throws MongoQueryException)
