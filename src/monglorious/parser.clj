@@ -8,6 +8,14 @@
             [clojure.string :refer [lower-case]])
   (:import (org.apache.commons.lang3 StringEscapeUtils)))
 
+(defn flatten-map
+  [form]
+  (into {} (mapcat (fn [[k v]]
+                     (if (map? v)
+                       (flatten-map v)
+                       [[k v]]))
+                   form)))
+
 (def ^{:private true} whitespace
   (insta/parser
     "whitespace = #'\\s+'"))
@@ -30,29 +38,41 @@
 (defn simplfy
   "Simplifies an expression tree"
   [tree]
-  (insta-transform/transform
-    {:query                identity
-     :TRUE                 #(do true)
-     :FALSE                #(do false)
-     :boolean              identity
-     :identifier           identity
-     :single-quoted-string (partial trim-string "'")
-     :double-quoted-string (partial trim-string "\"")
-     :string               identity
-     :number               (fn [s] (let [n (clojure.edn/read-string s)] (when n n)))
-     :list                 (fn [& args] (into [] args))
-     :map-item             (fn [key value] [(name key) value])
-     :map                  (fn [& args]
-                             (let [keys (take-nth 2 args)
-                                   vals (take-nth 2 (rest args))]
-                               (zipmap keys vals)))
-     :objectid             (fn [value] (if (nil? value)
-                                         (monger.util/object-id)
-                                         (monger.util/object-id value)))
-     :db-object            (fn [db-object] (first db-object))
-     :function-application (fn [name & args] (into [(lower-case name)] args))
-     }
-    tree))
+  (->> tree
+
+       ;; Replace various parser elements
+       (insta-transform/transform
+         {:query                identity
+          :TRUE                 #(do true)
+          :FALSE                #(do false)
+          :boolean              identity
+          :identifier           identity
+          :single-quoted-string (partial trim-string "'")
+          :double-quoted-string (partial trim-string "\"")
+          :string               identity
+          :number               (fn [s] (let [n (clojure.edn/read-string s)] (when n n)))
+          :list                 (fn [& args] (into [] args))
+          :map-item             (fn [key value] [(name key) value])
+          :map                  (fn [& args]
+                                  (let [keys (take-nth 2 args)
+                                        vals (take-nth 2 (rest args))]
+                                    (zipmap keys vals)))
+          :objectid             (fn [value] (if (nil? value)
+                                              (monger.util/object-id)
+                                              (monger.util/object-id value)))
+          :db-object            (fn [db-object] (first db-object))
+          :function-application (fn [name & args] (into [(lower-case name)] args))
+          :regex                (fn [& args] (zipmap ["$regex" "$options"] args))
+          })
+
+       ;; Post-walk optimizations
+       (clojure.walk/postwalk (fn [form]
+                                (cond
+                                  (and (map? form)
+                                       (contains? form "$regex")
+                                       (map? (get form "$regex")))
+                                  (flatten-map form)
+                                  :else form)))))
 
 (defn parse-unsimplified
   "Parse a MongoDB query into an unsimplified expression tree."

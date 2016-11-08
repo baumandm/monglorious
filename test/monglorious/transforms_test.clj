@@ -135,6 +135,30 @@
         (execute {} "testdb" "db.documents.find({ age: { $lte: 18 }})") => #(and (coll? %) (= 4 (count %)) (every? (fn [doc] (<= (:age doc) 18)) %))
         (execute {} "testdb" "db.documents.find({ name: { $in: ['Anna', 'Bartleby', 'Xavier', 'Zoey'] }})") => #(and (coll? %) (= 3 (count %))))
 
+  (fact "Monglorious finds documents with regex filters"
+        (execute {} "testdb" "db.documents.find({ name: { $regex: '^A.*' }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
+                                                                                                                    (or (= "Anna" name)
+                                                                                                                        (= "Alan" name))))
+        (execute {} "testdb" "db.documents.find({ name: { $regex: '^a.*' }})") => #(and (coll? %) (empty? %))
+        (execute {} "testdb" "db.documents.find({ name: { $regex: '^a.*', $options: 'i' }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
+                                                                                                                                   (or (= "Anna" name)
+                                                                                                                                       (= "Alan" name))))
+        (execute {} "testdb" "db.documents.find({ name: /^A.*/ })") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
+                                                                                                         (or (= "Anna" name)
+                                                                                                             (= "Alan" name))))
+        (execute {} "testdb" "db.documents.find({ name: /^a.*/i })") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
+                                                                                                          (or (= "Anna" name)
+                                                                                                              (= "Alan" name))))
+        (execute {} "testdb" "db.documents.find({ name: { $regex: /^A.*/ }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
+                                                                                                                                   (or (= "Anna" name)
+                                                                                                                                       (= "Alan" name))))
+        (execute {} "testdb" "db.documents.find({ name: { $regex: /^a.*/, $options: 'i' }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
+                                                                                                                                   (or (= "Anna" name)
+                                                                                                                                       (= "Alan" name))))
+        (execute {} "testdb" "db.documents.find({ name: { $regex: /^a.*/m, $options: 'i' }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
+                                                                                                                                   (or (= "Anna" name)
+                                                                                                                                       (= "Alan" name)))))
+
   (fact "Monglorious finds one document without any filters"
         (execute {} "testdb" "db.documents.findOne()") => #(and (map? %) (contains? % :name))
         (execute {} "testdb" "db.documents.FINDONE()") => #(and (map? %) (contains? % :name))
