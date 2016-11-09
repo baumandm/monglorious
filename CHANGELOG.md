@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.0
+
+- Add db.collection.aggregate()
+
 ## 0.4.0
 
 - Add regex support to db.collection.find()

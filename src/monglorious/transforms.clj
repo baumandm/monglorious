@@ -83,6 +83,9 @@
         "getindexes"
         (fn [_ db] (mg-coll/indexes-on db collection-name))
 
+        "aggregate"
+        (fn [_ db] (apply (partial mg-coll/aggregate db collection-name) args))
+
         (throw (Exception. (format "Unsupported function: %s." function-name)))))
 
     ;; More than one function

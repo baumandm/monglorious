@@ -244,4 +244,9 @@
 
   (fact "Monglorious finds then tries unknown functions"
         (execute {} "testdb" "db.documents.find().foo()") => (throws MongoQueryException)
-        (execute {} "testdb" "db.documents.find().head({}).sort({name: -1})") => (throws MongoQueryException)))
+        (execute {} "testdb" "db.documents.find().head({}).sort({name: -1})") => (throws MongoQueryException))
+
+  (fact "Monglorious aggregates using $group"
+        (execute {} "testdb" "db.documents.aggregate([{ $group: { _id: '$child', total: { $sum: '$age' }} }])") => #(and (coll? %) (= 2 (count %)))
+        (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: 1} }])") => #(and (coll? %) (= 9 (count %)) (= "Alan" (:name (first %))))
+        (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: -1} }])") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %))))))
