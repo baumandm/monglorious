@@ -1,0 +1,29 @@
+{
+  "name": "monglorious-docs",
+  "author": {
+    "name": "Dave Bauman",
+    "email": "baumandm@gmail.com"
+  },
+  "url": "https://github.com/baumandm/monglorious",
+  "license": "MIT",
+  "description": "Monglorious Documentation website",
+  "private": true,
+  "main": "gulpfile.js",
+  "devDependencies": {
+    "gulp": "~3.9",
+    "gulp-autoprefixer": "~3.1",
+    "gulp-bower": "0.0.13",
+    "gulp-concat": "~2.6",
+    "gulp-filter": "^4.0.0",
+    "gulp-flatten": "^0.3.1",
+    "gulp-minify-css": "~1.2",
+    "gulp-order": "^1.1.1",
+    "gulp-plumber": "~1.1",
+    "gulp-sass": "~2.3",
+    "gulp-sequence": "^0.4.6",
+    "gulp-uglify": "~2.0",
+    "gulp-watch": "^4.3.10",
+    "gulp-webserver": "^0.9.1",
+    "main-bower-files": "^2.13.1"
+  }
+}

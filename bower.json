@@ -1,0 +1,53 @@
+{
+  "name": "monglorious-docs",
+  "description": "Monglorious Documentation website",
+  "license": "MIT",
+  "authors": [
+    "Dave Bauman <baumandm@gmail.com>"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "bitters": "1.1.0",
+    "bourbon": "4.2.5",
+    "fontawesome": "4.4.0",
+    "jquery": "3.1.1",
+    "lato": "0.3.0",
+    "neat": "1.7.2",
+    "open-sans-fontface": "1.4.0",
+    "normalize-scss": "normalize.scss#^6.0.0"
+  },
+  "overrides": {
+    "bitters": {
+      "main": []
+    },
+    "fontawesome": {
+      "main": [
+        "css/font-awesome.css",
+        "fonts/*"
+      ]
+    },
+    "jquery": {
+      "main": [
+        "dist/jquery.slim.js"
+      ]
+    },
+    "lato": {
+      "main": [
+        "css/lato.css",
+        "font/lato-light/*",
+        "font/lato-bold/*"
+      ]
+    },
+    "open-sans-fontface": {
+      "main": [
+        "open-sans.css",
+        "fonts/**/*"
+      ]
+    }
+  }
+}
