@@ -15,7 +15,7 @@ var gulp = require('gulp'),
     webserver = require('gulp-webserver');
 
 gulp.task('bower-install', function () {
-  bower();
+  return bower();
 });
 
 gulp.task('vendor-fonts', function () {

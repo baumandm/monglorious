@@ -15,6 +15,10 @@ Also available:
 
     gulp server
 
+## Credits
+
+Github Corner by Tim Holman: https://github.com/tholman/github-corners
+
 ## License
 
 Copyright © 2016 Dave Bauman

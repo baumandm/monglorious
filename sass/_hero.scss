@@ -1,0 +1,19 @@
+.hero {
+  align-items: center;
+  background: image-url("background-image.png");
+  background-position: right;
+  background-size: none;
+  display: flex;
+  justify-content: center;
+  min-height: 24em;
+  padding: 2em;
+
+  .hero-content {
+    max-width: 50em;
+    text-align: center;
+  }
+
+  .hero-logo {
+    margin: auto;
+  }
+}
