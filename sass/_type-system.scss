@@ -55,7 +55,7 @@ body {
     margin-bottom: 0.6em;
 
     @include media($medium-screen) {
-      font-size: 3.6em;
+      font-size: 3.0em;
     }
   }
 
@@ -64,37 +64,37 @@ body {
     font-size: 1.2em;
     font-weight: 400;
     line-height: 1.5em;
-    margin-bottom: 1.2em;
+    margin-bottom: 1.1em;
 
     @include media($medium-screen) {
-      font-size: 1.6em;
+      font-size: 1.25em;
     }
-  }
-
-  code {
-    background: #F7F7F7;
-    border-radius: $base-border-radius * 1.5;
-    border: 1px solid #E0E0E0;
-    font-size: 0.8em;
-    font-style: normal;
-    padding: 0.1em 0.4em;
-    white-space: nowrap;
   }
 
   h3 {
    font-family: $serif;
+   font-size: 1.3em;
+   font-weight: 300;
+   line-height: 1.4em;
+   margin-bottom: 0.5em;
+  }
+
+  h4 {
+   font-family: $serif;
    font-size: 1em;
-   font-weight: 600;
+   font-weight: 200;
    line-height: 1.4em;
    margin-bottom: 0.5em;
    text-transform: uppercase;
   }
 
-  p.date {
-    color: transparentize($base-font-color, 0.6);
-    font-family: $serif;
+  code {
+    display: block;
+    white-space: pre;
     font-size: 0.8em;
-    margin-bottom: 0.5em;
+    font-style: normal;
+    padding: 0.1em 0.4em;
+    margin-bottom: 0.75em;
   }
 
   p {
@@ -111,28 +111,11 @@ body {
     }
   }
 
-  a.read-more {
-    display: inline-block;
-    font-family: $serif;
-    font-size: 0.8em;
-    font-weight: 700;
-    margin-left: 0.2em;
-    position: relative;
-    text-transform: uppercase;
-
-    span {
-      font-size: 1.8em;
-      position: absolute;
-      right: -12px;
-      top: -2px;
-    }
-  }
-
   hr {
     width: 3em;
   }
 
-  p.author {
-    font-family: $serif;
+  button {
+    font-size: 0.89em
   }
 }

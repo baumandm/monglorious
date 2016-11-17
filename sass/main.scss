@@ -32,3 +32,22 @@
 .mongodb-logo {
   width: 256px;
 }
+
+
+.main-container {
+  @include outer-container(100%);
+  @include pad(0 2em 4em 2em);
+
+  .blurb {
+    @include span-columns(8);
+    @include shift(2);
+
+    &.divider {
+      margin-bottom: 30px;
+    }
+
+    &.footer {
+      font-size: 0.9em;
+    }
+  }
+}

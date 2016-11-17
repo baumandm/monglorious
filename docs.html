@@ -10,7 +10,7 @@
     <meta name="copyright" content="Copyright 2016, Dave Bauman">
     <meta http-equiv="ClearType" content="on">
 
-    <title>Monglorious</title>
+    <title>Monglorious | Documentation</title>
 
     <link rel="icon" type="image/png" href="img/favicon16.png" sizes="16x16">
     <link rel="icon" type="image/png" href="img/favicon32.png" sizes="32x32">
@@ -32,8 +32,8 @@
         <h1>Monglorious!</h1>
         <h2>Query MongoDB with Strings</h2>
         <div class="hero-buttons">
-          <a href="docs.html" aria-label="View documentation">
-            <button>Docs</button>
+          <a href="index.html" aria-label="View About">
+            <button>About</button>
           </a>
           <a href="https://clojars.org/monglorious" aria-label="View project on Clojars">
             <button>Clojars</button>
@@ -48,41 +48,21 @@
     <div class="main-container">
 
       <div class="blurb">
-        <h3>Query MongoDB using Strings</h3>
+        <h3>Connection</h3>
         <p>
-          Monglorious is a MongoDB client which accepts string queries, in the syntax of the MongoDB shell.
-          This is in strict contrast to virtually every other MongoDB client which exposes a programmatic
-          DSL in the target language.
-        </p>
-        <code style="color: blue">(execute "mongodb://localhost:27017/testdb" "db.documents.find({ name: 'Xavier' })")</code>
-
-        <code style="color: dark-gray">=> ({:_id #object[org.bson.types.ObjectId 0x7acd5871 "5815c9d9b160550f0eab8868"]
-     :name "Xavier"
-     :age 2
-     :score 17772})
-        </code>
-      </div>
-      <div class="blurb">
-        <h3>How Does it Work?</h3>
-        <p>
-          Queries are parsed with a custom-build grammar and translated into an abstract syntax tree,
-          which is then in turn converted into the series of function calls to execute the specified query.
-        </p>
-      </div>
-      <div class="blurb">
-        <h3>Why?</h3>
-        <p>
-          This library fills a niche of scenarios where MongoDB queries cannot be hard-coded into the
-          specific function calls of an existing library. For example, a BI tool might allow an analyst
-          to provide a MongoDB query to retrieve some data, similar to how it might allow a SQL query.
+          Lorem ipsum...
         </p>
       </div>
 
       <div class="blurb divider">
         <hr />
       </div>
-      <div class="blurb footer">
-        <p>Built by Dave Bauman. MIT Licensed. Powered by Clojure.<p>
+
+      <div class="blurb">
+        <h3>Supported Queries</h3>
+        <p>
+          Lorem ipsum...
+        </p>
       </div>
 
     </div>
