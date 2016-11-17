@@ -83,8 +83,9 @@ gulp.task('webserver', function () {
       .pipe(webserver({
           host: '0.0.0.0',
           port: 8080,
+          path: '/monglorious',
           livereload: true,
-          open: 'http://localhost:8080'
+          open: 'http://localhost:8080/monglorious'
       }));
 });
 
