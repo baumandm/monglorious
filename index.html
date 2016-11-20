@@ -55,13 +55,13 @@
           This is in strict contrast to virtually every other MongoDB client which exposes a programmatic
           DSL in the target language.
         </p>
-        <code style="color: blue">(execute "mongodb://localhost:27017/testdb" "db.documents.find({ name: 'Xavier' })")</code>
+        <pre><code class="clojure">(execute "mongodb://localhost:27017/testdb" "db.documents.find({ name: 'Xavier' })")
 
-        <code style="color: dark-gray">=> ({:_id #object[org.bson.types.ObjectId 0x7acd5871 "5815c9d9b160550f0eab8868"]
+=> ({:_id #object[org.bson.types.ObjectId 0x7acd5871 "5815c9d9b160550f0eab8868"]
      :name "Xavier"
      :age 2
      :score 17772})
-        </code>
+        </code></pre>
       </div>
       <div class="blurb">
         <h3>How Does it Work?</h3>
