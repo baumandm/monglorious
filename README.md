@@ -17,6 +17,8 @@ Also available:
 
 ## Credits
 
+Syntax highlighting by [Highlight.js(https://highlightjs.org/).
+
 Github Corner by Tim Holman: https://github.com/tholman/github-corners
 
 ## License
