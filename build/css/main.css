@@ -549,6 +549,43 @@ dl {
   dl dd {
     margin: 0; }
 
+.scroll-on-page {
+  display: inline-block; }
+  .scroll-on-page a {
+    color: #477dca;
+    text-decoration: none; }
+  @media screen and (min-width: 900px) {
+    .scroll-on-page aside {
+      float: left;
+      display: block;
+      margin-right: 2.35765%;
+      width: 31.76157%; }
+      .scroll-on-page aside:last-child {
+        margin-right: 0; } }
+  .scroll-on-page .scroll-on-page-link {
+    border-bottom: 1px solid rgba(71, 125, 202, 0.2);
+    display: block;
+    margin-right: 1.5em;
+    outline: none;
+    padding: 0.75em 0; }
+    .scroll-on-page .scroll-on-page-link:last-child {
+      margin-bottom: 1.5em; }
+  .scroll-on-page article h4 {
+    margin: 0 0 0.5em 0; }
+  .scroll-on-page article p {
+    color: #333;
+    line-height: 1.5; }
+  .scroll-on-page article section p:last-of-type {
+    margin-bottom: 2em; }
+  @media screen and (min-width: 900px) {
+    .scroll-on-page article {
+      float: left;
+      display: block;
+      margin-right: 2.35765%;
+      width: 65.88078%; }
+      .scroll-on-page article:last-child {
+        margin-right: 0; } }
+
 table {
   border-collapse: collapse;
   font-feature-settings: "kern", "liga", "tnum";
