@@ -53,7 +53,7 @@ gulp.task('scripts', function () {
 });
 
 gulp.task('sass', function(){
-  gulp.src('sass/*.scss')
+  gulp.src('sass/**/*.scss')
       .pipe(plumber())
       .pipe(sass({
         includePaths: [

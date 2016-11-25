@@ -2854,3 +2854,7 @@ body {
       margin-bottom: 30px; }
     .main-container .blurb.footer {
       font-size: 0.9em; }
+
+ul.indent > li {
+  display: block;
+  margin-left: 2rem; }

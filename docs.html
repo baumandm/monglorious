@@ -58,22 +58,60 @@
         <article>
           <section>
             <h4 id="overview">Overview</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt?</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt?</p>
+            <p>
+              Monglorious is a synchronous MongoDB client. Depending on the query,
+              successful responses are always returned as either:
+              <ul>
+                <li>Value (number, string)</li>
+                <li>Collection of strings</li>
+                <li>Collection of maps</li>
+              </ul>
+            </p>
           </section>
           <section>
             <h4 id="executing-queries">Executing Queries</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt?</p>
             <pre><code class="clojure">(execute connection-uri query)</code></pre>
+            <pre><code class="clojure">(execute connection-options-or-uri db-name query)</code></pre>
+            <p>Connects to a MongoDB database, executes a query, and returns the response. Closes the connection automatically after execution.</p>
+            <pre><code class="clojure">(execute-with-connection {:keys [conn db]} query)</code></pre>
+            <p>Executes a query with an existing MongoDB connection, and leaves the connection open. Use to avoid a performance hit from repeated connection attempts. Use the (get-connection) function to open an initial connection.</p>
           </section>
           <section>
             <h4 id="connections">Connections</h4>
-            <p>lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt?</p>
+            <p>Monglorious supports standard
+              <a href="https://docs.mongodb.com/manual/reference/connection-string/">MongoDB connection URIs</a>,
+              as well as <a href="http://clojuremongodb.info/articles/connecting.html">Monger connection options</a>.
+              The same connection formats are available whether using (execute) or (execute-with-connection).</p>
+            <pre><code class="clojure">(get-connection connection-uri)</code></pre>
+            <pre><code class="clojure">(get-connection connection-options-or-uri db-name)</code></pre>
             <a class="scroll-on-page-link" href="#scroll-on-page-top">Back to top</a>
           </section>
           <section>
             <h4 id="supported-queries">Supported Queries</h4>
-            <p>lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum aliquid necessitatibus, repudiandae veniam labore, consequatur maiores dolore unde non deleniti, aliquam minima ex nulla error eveniet vel tempore, in incidunt?</p>
+            <p>Monglorious supports the following limited subset of the <a href="https://docs.mongodb.com/v3.2/reference/mongo-shell/">MongoDB shell</a> commands:</p>
+            <pre><code>
+    show dbs
+    show databases
+    show collections
+
+    db.runCommand({ serverStatus: 1 })
+    db.runCommand({ dbStats: 1 })
+    db.runCommand({ whatmyuri: 1 })
+    db.runCommand({ collStats: "&lt;collection name&gt;"})
+
+    db.&lt;collection&gt;.find(&lt;query&gt;)
+    db.&lt;collection&gt;.findOne(&lt;query&gt;)
+    db.&lt;collection&gt;.count()
+    db.&lt;collection&gt;.find(&lt;query&gt;).count()
+    db.&lt;collection&gt;.find(...).sort(...).skip(...).limit(...)
+            </code></pre>
+            <p>
+              MongoDB functions are case-insensitive. Like the MongoDB shell,
+              quotes are optional on object keys, and can be either single or double quotes.
+            </p>
+            <p>
+              db.runCommand() can either accept a map, or a string containing the command to run.
+            </p>
             <a class="scroll-on-page-link" href="#scroll-on-page-top">Back to top</a>
           </section>
         </article>
