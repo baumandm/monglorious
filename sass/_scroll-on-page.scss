@@ -26,6 +26,10 @@
     outline: none;
     padding: ($base-spacing / 2) 0;
 
+    &.back-to-top {
+      margin-bottom: 2em;
+    }
+
     &:last-child {
       margin-bottom: $base-spacing;
     }

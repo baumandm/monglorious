@@ -22,7 +22,7 @@
     "gulp-sass": "~2.3",
     "gulp-sequence": "^0.4.6",
     "gulp-uglify": "~2.0",
-    "gulp-watch": "^4.3.10",
+    "gulp-watch": "^4.3.11",
     "gulp-webserver": "^0.9.1",
     "main-bower-files": "^2.13.1"
   }

@@ -89,7 +89,7 @@ gulp.task('webserver', function () {
       }));
 });
 
-gulp.task('watch', function(){
+gulp.task('watch', function () {
   watch('js/**/*.js', function () { gulp.start(['scripts']); });
   watch('sass/**/*.scss', function () { gulp.start(['sass']); });
 });

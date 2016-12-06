@@ -35,6 +35,9 @@
           <a href="index.html" aria-label="View About">
             <button>About</button>
           </a>
+          <a href="api/index.html" aria-label="View API documentation">
+            <button>API</button>
+          </a>
           <a href="https://clojars.org/monglorious" aria-label="View project on Clojars">
             <button>Clojars</button>
           </a>
@@ -67,6 +70,7 @@
                 <li>Collection of maps</li>
               </ul>
             </p>
+            <a class="scroll-on-page-link back-to-top" href="#scroll-on-page-top">Back to top</a>
           </section>
           <section>
             <h4 id="executing-queries">Executing Queries</h4>
@@ -75,6 +79,7 @@
             <p>Connects to a MongoDB database, executes a query, and returns the response. Closes the connection automatically after execution.</p>
             <pre><code class="clojure">(execute-with-connection {:keys [conn db]} query)</code></pre>
             <p>Executes a query with an existing MongoDB connection, and leaves the connection open. Use to avoid a performance hit from repeated connection attempts. Use the (get-connection) function to open an initial connection.</p>
+            <a class="scroll-on-page-link back-to-top" href="#scroll-on-page-top">Back to top</a>
           </section>
           <section>
             <h4 id="connections">Connections</h4>
@@ -84,7 +89,7 @@
               The same connection formats are available whether using (execute) or (execute-with-connection).</p>
             <pre><code class="clojure">(get-connection connection-uri)</code></pre>
             <pre><code class="clojure">(get-connection connection-options-or-uri db-name)</code></pre>
-            <a class="scroll-on-page-link" href="#scroll-on-page-top">Back to top</a>
+            <a class="scroll-on-page-link back-to-top" href="#scroll-on-page-top">Back to top</a>
           </section>
           <section>
             <h4 id="supported-queries">Supported Queries</h4>
@@ -112,7 +117,7 @@
             <p>
               db.runCommand() can either accept a map, or a string containing the command to run.
             </p>
-            <a class="scroll-on-page-link" href="#scroll-on-page-top">Back to top</a>
+            <a class="scroll-on-page-link back-to-top" href="#scroll-on-page-top">Back to top</a>
           </section>
         </article>
       </div>
