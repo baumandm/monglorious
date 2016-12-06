@@ -8,7 +8,7 @@
             [clojure.string :refer [lower-case]])
   (:import (org.apache.commons.lang3 StringEscapeUtils)))
 
-(defn flatten-map
+(defn- flatten-map
   [form]
   (into {} (mapcat (fn [[k v]]
                      (if (map? v)
@@ -20,12 +20,12 @@
   (insta/parser
     "whitespace = #'\\s+'"))
 
-(def monglorious-parser
+(def ^{:private true} monglorious-parser
   (time (insta/parser (clojure.java.io/resource "monglorious-grammar.ebnf")
                       :string-ci true
                       :auto-whitespace whitespace)))
 
-(defn trim-string
+(defn- trim-string
   [quote-char string]
   (letfn [(trim [s] (subs s (count quote-char) (- (count s) (count quote-char))))
           (quotes [s] (clojure.string/replace s (str "\\" quote-char) quote-char))

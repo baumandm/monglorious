@@ -23,6 +23,7 @@
 
              :uberjar {:aot :all}}
 
+  :codox {:namespaces [monglorious.core monglorious.parser]}
   :release-tasks [["vcs" "assert-committed"]
                   ["clean"]
                   ["kibit"]
