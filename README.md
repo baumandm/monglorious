@@ -37,6 +37,14 @@ Add :autotest to watch for changes and re-run tests as the source changes.
 
     lein midje :autotest
 
+## Building API Documentation
+
+[Codox](https://github.com/weavejester/codox) is used to generate API documentation for Monglorious.
+
+    lein codox
+
+This generates files in `target/base+system+user+dev/doc`.  Copy these files over to the `gh-pages` branch.
+
 ## License
 
 Copyright © 2016 Dave Bauman
