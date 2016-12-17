@@ -1,5 +1,7 @@
 (ns monglorious.core
-  (:gen-class)
+  (:gen-class
+    :name org.baumandm.monglorious.Core
+    :main false)
   (:require [monglorious.parser :as parser]
             [monger.core :as mg]))
 

@@ -5,7 +5,8 @@
             [monger.core :as mg]
             [monger.command :as mg-cmd]
             [monger.conversion :refer [from-db-object]]
-            [clojure.string :refer [lower-case]])
+            [clojure.string :refer [lower-case]]
+            [clojure.walk :refer [postwalk]])
   (:import (org.apache.commons.lang3 StringEscapeUtils)))
 
 (defn- flatten-map
@@ -66,7 +67,7 @@
           })
 
        ;; Post-walk optimizations
-       (clojure.walk/postwalk (fn [form]
+       (postwalk (fn [form]
                                 (cond
                                   (and (map? form)
                                        (contains? form "$regex")
