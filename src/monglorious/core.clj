@@ -1,9 +1,12 @@
 (ns monglorious.core
-  (:gen-class
-    :name org.baumandm.monglorious.Core
-    :main false)
   (:require [monglorious.parser :as parser]
-            [monger.core :as mg]))
+            [monger.core :as mg])
+  (:gen-class
+    :name org.baumandm.monglorious.Monglorious
+    :main false
+    :methods [#^{:static true} [execute [String String] Object]
+              #^{:static true} [executeWithConnection [com.mongodb.MongoClient com.mongodb.DB String] Object]
+              #^{:static true} [getConnection [String] Object]]))
 
 (defn get-connection
   "Returns a connection and db object that can be reused multiple times"
@@ -39,3 +42,23 @@
      (mg/disconnect (:conn connection))
      result))
   )
+
+;; Java Interop implementation
+
+(defrecord MongloriousConnection
+  [conn db])
+
+(defn -execute
+  "A Java-callable wrapper around 'execute'."
+  [uri query]
+  (execute uri query))
+
+(defn -executeWithConnection
+  "A Java-callable wrapper around 'execute-with-connection'."
+  [connection db query]
+  (execute-with-connection {:conn connection :db db} query))
+
+(defn -getConnection
+  "A Java-callable wrapper around 'get-connection'."
+  [uri]
+  (map->MongloriousConnection (get-connection uri)))
