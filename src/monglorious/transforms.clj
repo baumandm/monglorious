@@ -42,7 +42,7 @@
     :databases
     (fn [conn _] (vec (mg/get-db-names conn)))
     :collections
-    (fn [conn db] (vec (mg-db/get-collection-names db)))
+    (fn [_ db] (vec (mg-db/get-collection-names db)))
 
     (throw (Exception. "Unsupported database object."))))
 

@@ -2,8 +2,6 @@
   (:require [monglorious.transforms :refer :all]
             [instaparse.core :as insta]
             [instaparse.transform :as insta-transform]
-            [monger.core :as mg]
-            [monger.command :as mg-cmd]
             [monger.conversion :refer [from-db-object]]
             [clojure.string :refer [lower-case]]
             [clojure.walk :refer [postwalk]])
