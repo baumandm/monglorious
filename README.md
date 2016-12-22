@@ -3,7 +3,7 @@
 Monglorious is a MongoDB client library which 
 accepts textual queries in the syntax of the MongoDB shell. 
 
-Monglorious is written in Clojure.
+Monglorious is written in Clojure.  A Java wrapper is available; see below.
 
 [![Build Status](https://travis-ci.org/baumandm/monglorious.svg?branch=master)](https://travis-ci.org/baumandm/monglorious) [![Dependencies Status](https://jarkeeper.com/baumandm/monglorious/status.svg)](https://jarkeeper.com/baumandm/monglorious)
 
@@ -21,11 +21,11 @@ Add the following dependency to your project.clj file:
 
 [![](https://clojars.org/monglorious/latest-version.svg)](https://clojars.org/monglorious)
 
-## Under Development
+## Java Library
 
-This library is in fledgeling development mode.  Stay tuned for updates.
+[Monglorious-java](https://github.com/baumandm/monglorious-java) provides an idiomatic Java wrapper for Monglorious.
 
-Java bindings are on the roadmap.
+## Development
 
 ### Running Tests
 
@@ -37,7 +37,7 @@ Add :autotest to watch for changes and re-run tests as the source changes.
 
     lein midje :autotest
 
-## Building API Documentation
+### Building API Documentation
 
 [Codox](https://github.com/weavejester/codox) is used to generate API documentation for Monglorious.
 
