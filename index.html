@@ -54,11 +54,12 @@
       <div class="blurb">
         <h3>Query MongoDB using Strings</h3>
         <p>
-          Monglorious is a MongoDB client which accepts string queries, in the syntax of the MongoDB shell.
+          Monglorious is a Clojure MongoDB client which accepts string queries, in the syntax of the MongoDB shell.
           This is in strict contrast to virtually every other MongoDB client which exposes a programmatic
           DSL in the target language.
         </p>
-        <pre><code class="clojure">(execute "mongodb://localhost:27017/testdb" "db.documents.find({ name: 'Xavier' })")
+        <pre><code class="clojure">(execute "mongodb://localhost:27017/testdb"
+         "db.documents.find({ name: 'Xavier' })")
 
 => ({:_id #object[org.bson.types.ObjectId 0x7acd5871 "5815c9d9b160550f0eab8868"]
      :name "Xavier"
@@ -81,12 +82,19 @@
           to provide a MongoDB query to retrieve some data, similar to how it might allow a SQL query.
         </p>
       </div>
+      <div class="blurb">
+        <h3>Can I Use Java?</h3>
+        <p>
+          <a href="https://github.com/baumandm/monglorious-java">Monglorious-java<a> provides a Java wrapper of the Clojure library,
+            aiming to provide an easy-to-use and idiomatic Java interface.
+        </p>
+      </div>
 
       <div class="blurb divider">
         <hr />
       </div>
       <div class="blurb footer">
-        <p>Built by <a href="https://davebauman.io">Dave Bauman</a>. MIT Licensed. Powered by Clojure.<p>
+        <p>Built by <a href="https://davebauman.io">Dave Bauman</a>. EPL-1.0 Licensed. Powered by Clojure.<p>
       </div>
 
     </div>
