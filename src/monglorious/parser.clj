@@ -5,7 +5,10 @@
             [monger.conversion :refer [from-db-object]]
             [clojure.string :refer [lower-case]]
             [clojure.walk :refer [postwalk]])
-  (:import (org.apache.commons.lang3 StringEscapeUtils)))
+  (:import (org.apache.commons.lang3 StringEscapeUtils)
+           (java.util Date)
+           (java.time Instant ZonedDateTime)
+           (java.time.format DateTimeFormatter)))
 
 (defn- flatten-map
   [form]
@@ -59,6 +62,14 @@
           :objectid             (fn [value] (if (nil? value)
                                               (monger.util/object-id)
                                               (monger.util/object-id value)))
+          :date-string          (fn [& _] (let [now (ZonedDateTime/now)
+                                                dtf (DateTimeFormatter/ofPattern "EEE MMM dd yyyy HH:mm:ss 'GMT'Z '('zzz')'")]
+                                            (.format now dtf)))
+          :new-date             (fn [& _] (Date.))
+          :isodate              (fn [& args]
+                                  (if (zero? (count args))
+                                    (Date.)
+                                    (Date/from (Instant/parse (first args)))))
           :db-object            (fn [db-object] (first db-object))
           :function-application (fn [name & args] (into [(lower-case name)] args))
           :regex                (fn [& args] (zipmap ["$regex" "$options"] args))

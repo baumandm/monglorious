@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.0
+
+- Add Date() and ISODate() functions 
+
 ## 0.5.0
 
 - Add db.collection.aggregate()

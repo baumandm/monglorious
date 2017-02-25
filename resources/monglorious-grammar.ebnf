@@ -19,7 +19,7 @@ run-command = DB DOT <'RUNCOMMAND'> LPAREN literal RPAREN
 
 (* Common Definitions *)
 identifier = #'\$?[a-zA-Z0-9_]+'
-<literal> = string | number | map | list | boolean | objectid | regex
+<literal> = string | number | map | list | boolean | objectid | regex | date
 <string> = single-quoted-string | double-quoted-string
 single-quoted-string = #'(?s)\'\'|\'(?:.*?([^\\]|\\\\))?\''
 double-quoted-string = #'(?s)\"\"|\"(?:.*?([^\\]|\\\\))\"'
@@ -32,6 +32,10 @@ objectid = <'objectid'> LPAREN string RPAREN
 regex = <'/'> regex-contents <'/'> regex-options?
 <regex-contents> = #'[^//]+'
 <regex-options> = #'[imxs]+'
+<date> = date-string | new-date | isodate
+date-string = <'Date'> LPAREN <(literal (COMMA literal)*)?> RPAREN
+new-date = NEW <'Date'> LPAREN <(literal (COMMA literal)*)?> RPAREN
+isodate = NEW? <'ISODate'> LPAREN (literal (COMMA literal)*)? RPAREN
 
 <DB> = <'DB'>
 <DOT> = <'.'>
@@ -40,3 +44,4 @@ regex = <'/'> regex-contents <'/'> regex-options?
 <RPAREN> = <')'>
 TRUE = <'TRUE'>
 FALSE = <'FALSE'>
+<NEW> = <'NEW'>

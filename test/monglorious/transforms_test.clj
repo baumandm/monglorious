@@ -4,7 +4,10 @@
             [monger.collection :as mc]
             [monglorious.test-helpers :refer :all])
   (:use midje.sweet)
-  (:import (com.mongodb MongoQueryException)))
+  (:import (com.mongodb MongoQueryException)
+           (java.util Date)
+           (java.time Instant)
+           (java.time.temporal ChronoUnit)))
 
 ;; Test run-command-transform()
 (against-background
@@ -86,10 +89,9 @@
                                               {:name "Roxy" :age 18 :score 104059}
                                               {:name "Anna" :age 18 :score 102459}
                                               {:name "Jack" :age 32 :score 445566}])))
-   ;(after :contents
-   ;       (let [conn (mg/connect)]
-   ;         (mg/drop-db conn "testdb")))]
-   ]
+   (after :contents
+          (let [conn (mg/connect)]
+            (mg/drop-db conn "testdb")))]
 
   (fact "Monglorious gets collection stats"
         (execute {} "testdb" "db.documents.stats()") => is-ok?)
@@ -249,4 +251,36 @@
   (fact "Monglorious aggregates using $group"
         (execute {} "testdb" "db.documents.aggregate([{ $group: { _id: '$child', total: { $sum: '$age' }} }])") => #(and (coll? %) (= 2 (count %)))
         (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: 1} }])") => #(and (coll? %) (= 9 (count %)) (= "Alan" (:name (first %))))
-        (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: -1} }])") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %))))))
+        (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: -1} }])") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %))))
+        (execute {} "testdb" "db.documents.aggregate([{ $group: { _id: {'child': '$child', 'age': '$age'}, total: { $sum: '$age' }} }])") => #(and (coll? %) (= 7 (count %)))))
+
+
+(against-background
+  [(before :contents
+           (let [conn (mg/connect)
+                 db (mg/get-db conn "testdb")
+                 now (Instant/now)]
+             (mc/remove db "timeDocs")
+             (mc/insert-batch db "timeDocs" [{:time (Date/from (.plus now 2 ChronoUnit/HOURS)) :metric "queriesRan" :value 0}
+                                             {:time (Date/from (.plus now 1 ChronoUnit/HOURS)) :metric "queriesRan" :value 1}
+                                             {:time (Date/from now) :metric "queriesRan" :value 2}
+                                             {:time (Date/from (.minus now 1 ChronoUnit/HOURS)) :metric "queriesRan" :value 3}
+                                             {:time (Date/from (.minus now 2 ChronoUnit/HOURS)) :metric "queriesRan" :value 4}
+                                             {:time (Date/from (.minus now 3 ChronoUnit/HOURS)) :metric "queriesRan" :value 5}
+                                             {:time (Date/from (.minus now 4 ChronoUnit/HOURS)) :metric "queriesRan" :value 6}
+                                             {:time (Date/from (.minus now 5 ChronoUnit/HOURS)) :metric "queriesRan" :value 7}
+                                             {:time (Date/from (Instant/parse "2017-02-15T00:00:00.000Z")) :metric "queriesRan" :value 8}
+                                             {:time (Date/from (Instant/parse "2017-02-14T20:45:01.000Z")) :metric "queriesRan" :value 8}])))
+   (after :contents
+          (let [conn (mg/connect)]
+            (mg/drop-db conn "testdb")))]
+
+  (fact "Monglorious finds documents using Date()"
+        (execute {} "testdb" "db.timeDocs.find({ time: { $gt: new Date() } }).count()") => 2
+        (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new Date() } }).count()") => 8
+        (execute {} "testdb" "db.timeDocs.find({ time: { $gt: ISODate() } }).count()") => 2
+        (execute {} "testdb" "db.timeDocs.find({ time: { $lt: ISODate() } }).count()") => 8
+        (execute {} "testdb" "db.timeDocs.find({ time: { $gt: new ISODate() } }).count()") => 2
+        (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new ISODate() } }).count()") => 8
+        (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new ISODate('2017-02-15T00:00:00.000Z') } }).count()") => 1
+        (execute {} "testdb" "db.timeDocs.find({ time: { $lte: new ISODate('2017-02-15T00:00:00.000Z') } }).count()") => 2))

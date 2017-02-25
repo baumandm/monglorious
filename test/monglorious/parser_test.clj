@@ -1,6 +1,9 @@
 (ns monglorious.parser-test
   (:require [monglorious.parser :refer :all])
-  (:use midje.sweet))
+  (:use midje.sweet)
+  (:import (java.util Date)
+           (java.time Instant ZonedDateTime)
+           (java.time.format DateTimeFormatter)))
 
 ;; Test parse-query()
 
@@ -43,6 +46,16 @@
 (fact "Monglorious parses ObjectIds"
       (parse-query "ObjectId('581d36e347aee26883837eb7')" :literal) => [(monger.util/object-id "581d36e347aee26883837eb7")]
       (parse-query "ObjectId(\"581d36e347aee26883837eb7\")" :literal) => [(monger.util/object-id "581d36e347aee26883837eb7")])
+
+(fact "Monglorious parses Dates"
+      (parse-query "Date()" :literal) => (fn [[date]]
+                                           (and
+                                             (string? date)
+                                             (= (.format (ZonedDateTime/now) (DateTimeFormatter/ofPattern "EEE MMM dd yyyy HH:mm:ss 'GMT'Z '('zzz')'")) date)))
+      (parse-query "new Date()" :literal) => (fn [[date]] (instance? Date date))
+      (parse-query "ISODate()" :literal) => (fn [[date]] (instance? Date date))
+      (parse-query "new ISODate()" :literal) => (fn [[date]] (instance? Date date))
+      (parse-query "ISODate('2017-02-25T15:23:59.340Z')" :literal) => (fn [[date]] (= date (Date/from (Instant/parse "2017-02-25T15:23:59.340Z")))))
 
 (fact "Monglorious parses SHOW ___ commands"
       (parse-query "show dbs") => [:show-command :dbs]
