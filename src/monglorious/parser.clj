@@ -4,11 +4,13 @@
             [instaparse.transform :as insta-transform]
             [monger.conversion :refer [from-db-object]]
             [clojure.string :refer [lower-case]]
-            [clojure.walk :refer [postwalk]])
+            [clojure.walk :refer [postwalk]]
+            [clj-time.core :as t]
+            [clj-time.format :as f]
+            [clj-time.coerce :as c])
   (:import (org.apache.commons.lang3 StringEscapeUtils)
            (java.util Date)
-           (java.time Instant ZonedDateTime)
-           (java.time.format DateTimeFormatter)))
+           (java.text SimpleDateFormat)))
 
 (defn- flatten-map
   [form]
@@ -62,14 +64,13 @@
           :objectid             (fn [value] (if (nil? value)
                                               (monger.util/object-id)
                                               (monger.util/object-id value)))
-          :date-string          (fn [& _] (let [now (ZonedDateTime/now)
-                                                dtf (DateTimeFormatter/ofPattern "EEE MMM dd yyyy HH:mm:ss 'GMT'Z '('zzz')'")]
-                                            (.format now dtf)))
-          :new-date             (fn [& _] (Date.))
+          :date-string          (fn [& _] (.format (SimpleDateFormat. "EEE MMM dd yyyy HH:mm:ss 'GMT'Z '('zzz')'") (Date.)))
+          :new-date             (fn [& _] (c/to-date (t/now)))
           :isodate              (fn [& args]
-                                  (if (zero? (count args))
-                                    (Date.)
-                                    (Date/from (Instant/parse (first args)))))
+                                  (c/to-date
+                                    (if (zero? (count args))
+                                      (t/now)
+                                      (f/parse (first args)))))
           :db-object            (fn [db-object] (first db-object))
           :function-application (fn [name & args] (into [(lower-case name)] args))
           :regex                (fn [& args] (zipmap ["$regex" "$options"] args))
@@ -90,7 +91,8 @@
   ([query start]
    (let [tree (monglorious-parser query :start start)]
      (if (insta/failure? tree)
-       (throw (Exception. ^String (with-out-str (print tree))))
+       (let [^String tree-str (with-out-str (print tree))]
+        (throw (Exception. tree-str)))
        tree))))
 
 (defn parse-query

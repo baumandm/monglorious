@@ -1,9 +1,10 @@
 (ns monglorious.parser-test
-  (:require [monglorious.parser :refer :all])
+  (:require [monglorious.parser :refer :all]
+            [clj-time.format :as f]
+            [clj-time.coerce :as c])
   (:use midje.sweet)
   (:import (java.util Date)
-           (java.time Instant ZonedDateTime)
-           (java.time.format DateTimeFormatter)))
+           (java.text SimpleDateFormat)))
 
 ;; Test parse-query()
 
@@ -51,11 +52,11 @@
       (parse-query "Date()" :literal) => (fn [[date]]
                                            (and
                                              (string? date)
-                                             (= (.format (ZonedDateTime/now) (DateTimeFormatter/ofPattern "EEE MMM dd yyyy HH:mm:ss 'GMT'Z '('zzz')'")) date)))
+                                             (= (.format (SimpleDateFormat. "EEE MMM dd yyyy HH:mm:ss 'GMT'Z '('zzz')'") (Date.)) date)))
       (parse-query "new Date()" :literal) => (fn [[date]] (instance? Date date))
       (parse-query "ISODate()" :literal) => (fn [[date]] (instance? Date date))
       (parse-query "new ISODate()" :literal) => (fn [[date]] (instance? Date date))
-      (parse-query "ISODate('2017-02-25T15:23:59.340Z')" :literal) => (fn [[date]] (= date (Date/from (Instant/parse "2017-02-25T15:23:59.340Z")))))
+      (parse-query "ISODate('2017-02-25T15:23:59.340Z')" :literal) => (fn [[date]] (= date (c/to-date (f/parse "2017-02-25T15:23:59.340Z")))))
 
 (fact "Monglorious parses SHOW ___ commands"
       (parse-query "show dbs") => [:show-command :dbs]

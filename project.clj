@@ -1,4 +1,4 @@
-(defproject monglorious "0.5.1"
+(defproject monglorious "0.6.0"
   :author "Dave Bauman"
   :description "Query MongoDB using strings!"
   :url "https://github.com/baumandm/monglorious"
@@ -7,19 +7,20 @@
             :distribution :repo}
 
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [instaparse "1.4.3"]
+                 [instaparse "1.4.5"]
                  [com.novemberain/monger "3.1.0"]
-                 [org.clojars.frozenlock/commons-lang "3.3.0"]]
+                 [org.clojars.frozenlock/commons-lang "3.3.0"]
+                 [clj-time "0.13.0"]]
 
   :target-path "target/%s"
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
 
   :profiles {:dev     {:dependencies [[midje "1.8.3"]
-                                      [org.slf4j/slf4j-nop "1.7.12"]]
+                                      [org.slf4j/slf4j-nop "1.7.24"]]
                        :plugins      [[lein-midje "3.2.1"]
-                                      [lein-kibit "0.1.2"]
+                                      [lein-kibit "0.1.3"]
                                       [jonase/eastwood "0.2.3"]
-                                      [lein-codox "0.10.2"]]}
+                                      [lein-codox "0.10.3"]]}
 
              :uberjar {:aot :all}}
 

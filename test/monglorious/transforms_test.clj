@@ -2,12 +2,12 @@
   (:require [monglorious.core :refer :all]
             [monger.core :as mg]
             [monger.collection :as mc]
-            [monglorious.test-helpers :refer :all])
+            [monglorious.test-helpers :refer :all]
+            [clj-time.core :as t]
+            [clj-time.format :as f]
+            [clj-time.coerce :as c])
   (:use midje.sweet)
-  (:import (com.mongodb MongoQueryException)
-           (java.util Date)
-           (java.time Instant)
-           (java.time.temporal ChronoUnit)))
+  (:import (com.mongodb MongoQueryException)))
 
 ;; Test run-command-transform()
 (against-background
@@ -259,18 +259,18 @@
   [(before :contents
            (let [conn (mg/connect)
                  db (mg/get-db conn "testdb")
-                 now (Instant/now)]
+                 now (t/now)]
              (mc/remove db "timeDocs")
-             (mc/insert-batch db "timeDocs" [{:time (Date/from (.plus now 2 ChronoUnit/HOURS)) :metric "queriesRan" :value 0}
-                                             {:time (Date/from (.plus now 1 ChronoUnit/HOURS)) :metric "queriesRan" :value 1}
-                                             {:time (Date/from now) :metric "queriesRan" :value 2}
-                                             {:time (Date/from (.minus now 1 ChronoUnit/HOURS)) :metric "queriesRan" :value 3}
-                                             {:time (Date/from (.minus now 2 ChronoUnit/HOURS)) :metric "queriesRan" :value 4}
-                                             {:time (Date/from (.minus now 3 ChronoUnit/HOURS)) :metric "queriesRan" :value 5}
-                                             {:time (Date/from (.minus now 4 ChronoUnit/HOURS)) :metric "queriesRan" :value 6}
-                                             {:time (Date/from (.minus now 5 ChronoUnit/HOURS)) :metric "queriesRan" :value 7}
-                                             {:time (Date/from (Instant/parse "2017-02-15T00:00:00.000Z")) :metric "queriesRan" :value 8}
-                                             {:time (Date/from (Instant/parse "2017-02-14T20:45:01.000Z")) :metric "queriesRan" :value 8}])))
+             (mc/insert-batch db "timeDocs" [{:time (c/to-date (t/plus now (t/hours 2))) :metric "queriesRan" :value 0}
+                                             {:time (c/to-date (t/plus now (t/hours 1))) :metric "queriesRan" :value 1}
+                                             {:time (c/to-date now) :metric "queriesRan" :value 2}
+                                             {:time (c/to-date (t/minus now (t/hours 1))) :metric "queriesRan" :value 3}
+                                             {:time (c/to-date (t/minus now (t/hours 2))) :metric "queriesRan" :value 4}
+                                             {:time (c/to-date (t/minus now (t/hours 3))) :metric "queriesRan" :value 5}
+                                             {:time (c/to-date (t/minus now (t/hours 4))) :metric "queriesRan" :value 6}
+                                             {:time (c/to-date (t/minus now (t/hours 5))) :metric "queriesRan" :value 7}
+                                             {:time (c/to-date (f/parse "2017-02-15T00:00:00.000Z")) :metric "queriesRan" :value 8}
+                                             {:time (c/to-date (f/parse "2017-02-14T20:45:01.000Z")) :metric "queriesRan" :value 8}])))
    (after :contents
           (let [conn (mg/connect)]
             (mg/drop-db conn "testdb")))]
@@ -283,4 +283,5 @@
         (execute {} "testdb" "db.timeDocs.find({ time: { $gt: new ISODate() } }).count()") => 2
         (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new ISODate() } }).count()") => 8
         (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new ISODate('2017-02-15T00:00:00.000Z') } }).count()") => 1
-        (execute {} "testdb" "db.timeDocs.find({ time: { $lte: new ISODate('2017-02-15T00:00:00.000Z') } }).count()") => 2))
+        (execute {} "testdb" "db.timeDocs.find({ time: { $lte: new ISODate('2017-02-15T00:00:00.000Z') } }).count()") => 2
+        (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new ISODate('2017-02-17') } }).count()") => 2))
