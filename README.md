@@ -47,6 +47,6 @@ This generates files in `target/base+system+user+dev/doc`.  Copy these files ove
 
 ## License
 
-Copyright © 2016 Dave Bauman
+Copyright © 2016-2017 Dave Bauman
 
 Distributed under the Eclipse Public License, the same as Clojure.
