@@ -23,6 +23,6 @@ Github Corner by Tim Holman: https://github.com/tholman/github-corners
 
 ## License
 
-Copyright © 2016 Dave Bauman
+Copyright © 2017 Dave Bauman
 
 Distributed under the Eclipse Public License, the same as Clojure.
