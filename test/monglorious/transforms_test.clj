@@ -7,7 +7,7 @@
             [clj-time.format :as f]
             [clj-time.coerce :as c])
   (:use midje.sweet)
-  (:import (com.mongodb MongoQueryException)))
+  (:import (com.mongodb MongoQueryException WriteResult)))
 
 ;; Test run-command-transform()
 (against-background
@@ -285,3 +285,39 @@
         (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new ISODate('2017-02-15T00:00:00.000Z') } }).count()") => 1
         (execute {} "testdb" "db.timeDocs.find({ time: { $lte: new ISODate('2017-02-15T00:00:00.000Z') } }).count()") => 2
         (execute {} "testdb" "db.timeDocs.find({ time: { $lt: new ISODate('2017-02-17') } }).count()") => 2))
+
+;; Test collect-command-transform() with insert()
+(against-background
+  [(before :contents
+           (let [conn (mg/connect)
+                 db (mg/get-db conn "testdb")]
+             (if db (mc/drop db "documents"))))
+   (after :contents
+          (let [conn (mg/connect)]
+            (mg/drop-db conn "testdb")))]
+
+  (fact "Monglorious inserts a document"
+        (execute {} "testdb" "db.documents.insert({name: 'TEST'})") => #(= "TEST" (get % "name"))
+        (execute {} "testdb" "db.documents.insert({name: 'DOCUMENT'})") => (fn [_]
+                                                                             (let [conn (mg/connect)
+                                                                                   db (mg/get-db conn "testdb")
+                                                                                   docs (mc/find-maps db "documents")]
+                                                                               (and (= 2 (count docs))
+                                                                                    (= #{"TEST" "DOCUMENT"} (set (map :name docs)))))))
+
+  (fact "Monglorious inserts several documents"
+        (execute {} "testdb" "db.documents.insert([{name: 'BATCH 1'}, {name: 'BATCH 2'}])") => (fn [_]
+                                                                                                 (let [conn (mg/connect)
+                                                                                                       db (mg/get-db conn "testdb")
+                                                                                                       docs (mc/find-maps db "documents")]
+                                                                                                   (and (= 4 (count docs))
+                                                                                                        (= #{"TEST" "DOCUMENT" "BATCH 1" "BATCH 2"} (set (map :name docs)))))))
+
+  (fact "Monglorious insertOnes a document"
+        (execute {} "testdb" "db.documents.insertOne({name: 'ONE'})") => #(= "ONE" (get % "name"))
+        (execute {} "testdb" "db.documents.insertOne({name: 'TWO'})") => (fn [_]
+                                                                             (let [conn (mg/connect)
+                                                                                   db (mg/get-db conn "testdb")
+                                                                                   docs (mc/find-maps db "documents")]
+                                                                               (and (= 6 (count docs))
+                                                                                    (= #{"TEST" "DOCUMENT" "BATCH 1" "BATCH 2" "ONE" "TWO"} (set (map :name docs))))))))

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.0
+
+- Add db.collection.insert() and db.collection.insertOne() functions
+
 ## 0.6.0
 
 - Add Date() and ISODate() functions 

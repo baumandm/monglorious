@@ -1,4 +1,4 @@
-(defproject monglorious "0.6.0"
+(defproject monglorious "0.7.0"
   :author "Dave Bauman"
   :description "Query MongoDB using strings!"
   :url "https://github.com/baumandm/monglorious"

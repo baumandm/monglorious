@@ -86,6 +86,16 @@
         "aggregate"
         (fn [_ db] (apply (partial mg-coll/aggregate db collection-name) args))
 
+        "insert"
+        (let [document-or-documents (first args)]
+          (if (sequential? document-or-documents)
+            (fn [_ db] (mg-coll/insert-batch db collection-name document-or-documents))
+            (fn [_ db] (apply (partial mg-coll/insert-and-return db collection-name) args))
+            ))
+
+        "insertone"
+        (fn [_ db] (apply (partial mg-coll/insert-and-return db collection-name) args))
+
         (throw (Exception. (format "Unsupported function: %s." function-name)))))
 
     ;; More than one function
