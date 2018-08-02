@@ -167,14 +167,14 @@
                                                                                                           (or (= "Anna" name)
                                                                                                               (= "Alan" name))))
         (execute {} "testdb" "db.documents.find({ name: { $regex: /^A.*/ }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
-                                                                                                                                   (or (= "Anna" name)
-                                                                                                                                       (= "Alan" name))))
+                                                                                                                    (or (= "Anna" name)
+                                                                                                                        (= "Alan" name))))
         (execute {} "testdb" "db.documents.find({ name: { $regex: /^a.*/, $options: 'i' }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
                                                                                                                                    (or (= "Anna" name)
                                                                                                                                        (= "Alan" name))))
         (execute {} "testdb" "db.documents.find({ name: { $regex: /^a.*/m, $options: 'i' }})") => #(and (coll? %) (= 2 (count %)) (let [name (:name (first %))]
-                                                                                                                                   (or (= "Anna" name)
-                                                                                                                                       (= "Alan" name)))))
+                                                                                                                                    (or (= "Anna" name)
+                                                                                                                                        (= "Alan" name)))))
 
   (fact "Monglorious finds one document without any filters"
         (execute {} "testdb" "db.documents.findOne()") => #(and (map? %) (contains? % :name))
@@ -220,8 +220,8 @@
                                                                                       (= 3 (count %))
                                                                                       (not-any? (fn [doc] (contains? doc :score)) %))
         (execute {} "testdb" "db.documents.find({ child: true }, { score: 0 }).limit(3)") => #(and (coll? %)
-                                                                                      (= 2 (count %))
-                                                                                      (not-any? (fn [doc] (contains? doc :score)) %)))
+                                                                                                   (= 2 (count %))
+                                                                                                   (not-any? (fn [doc] (contains? doc :score)) %)))
 
   (fact "Monglorious finds then sorts documents"
         (execute {} "testdb" "db.documents.find().sort({name: 1})") => #(and (coll? %) (= 9 (count %)) (= "Alan" (:name (first %))))
@@ -316,8 +316,26 @@
   (fact "Monglorious insertOnes a document"
         (execute {} "testdb" "db.documents.insertOne({name: 'ONE'})") => #(= "ONE" (get % "name"))
         (execute {} "testdb" "db.documents.insertOne({name: 'TWO'})") => (fn [_]
-                                                                             (let [conn (mg/connect)
-                                                                                   db (mg/get-db conn "testdb")
-                                                                                   docs (mc/find-maps db "documents")]
-                                                                               (and (= 6 (count docs))
-                                                                                    (= #{"TEST" "DOCUMENT" "BATCH 1" "BATCH 2" "ONE" "TWO"} (set (map :name docs))))))))
+                                                                           (let [conn (mg/connect)
+                                                                                 db (mg/get-db conn "testdb")
+                                                                                 docs (mc/find-maps db "documents")]
+                                                                             (and (= 6 (count docs))
+                                                                                  (= #{"TEST" "DOCUMENT" "BATCH 1" "BATCH 2" "ONE" "TWO"} (set (map :name docs))))))))
+
+;; Test db.collection.drop()
+(against-background
+  [(before :contents
+           (let [conn (mg/connect)
+                 db (mg/get-db conn "testdb")]
+             (mc/insert-batch db "documents" [{:name "Alan" :age 27 :score 17772}
+                                              {:name "Joe" :age 32 :score 8277}
+                                              {:name "Macy" :age 29 :score 8837777}])))
+   (after :contents
+          (let [conn (mg/connect)]
+            (mg/drop-db conn "testdb")))]
+
+  (fact "Monglorious drops a collection"
+        (execute {} "testdb" "db.documents.drop()") => (fn [_]
+                                                         (let [conn (mg/connect)
+                                                               db (mg/get-db conn "testdb")]
+                                                           (false? (mc/exists? db "documents"))))))

@@ -96,6 +96,9 @@
         "insertone"
         (fn [_ db] (apply (partial mg-coll/insert-and-return db collection-name) args))
 
+        "drop"
+        (fn [_ db] (apply (partial mg-coll/drop db collection-name) args))
+
         (throw (Exception. (format "Unsupported function: %s." function-name)))))
 
     ;; More than one function
