@@ -251,8 +251,8 @@
   (fact "Monglorious aggregates using $group"
         (execute {} "testdb" "db.documents.aggregate([{ $group: { _id: '$child', total: { $sum: '$age' }} }])") => #(and (coll? %) (= 2 (count %)))
         (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: 1} }])") => #(and (coll? %) (= 9 (count %)) (= "Alan" (:name (first %))))
-        (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: -1} }])") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %))))
-        (execute {} "testdb" "db.documents.aggregate([{ $group: { _id: {'child': '$child', 'age': '$age'}, total: { $sum: '$age' }} }])") => #(and (coll? %) (= 7 (count %)))))
+        (execute {} "testdb" "db.documents.aggregate([{ $sort: {name: -1} }], { cursor: {} })") => #(and (coll? %) (= 9 (count %)) (= "Zoey" (:name (first %))))
+        (execute {} "testdb" "db.documents.aggregate([{ $group: { _id: {'child': '$child', 'age': '$age'}, total: { $sum: '$age' }} }], { cursor: {} })") => #(and (coll? %) (= 7 (count %)))))
 
 
 (against-background

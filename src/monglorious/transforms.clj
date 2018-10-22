@@ -84,7 +84,13 @@
         (fn [_ db] (mg-coll/indexes-on db collection-name))
 
         "aggregate"
-        (fn [_ db] (apply (partial mg-coll/aggregate db collection-name) args))
+        (fn [_ db] (let [[stages opts] args
+                         opts' (->> (-> opts
+                                        (or {"cursor" {}})
+                                        (clojure.walk/keywordize-keys))
+                                    (into [])
+                                    (apply concat))]
+                     (apply (partial mg-coll/aggregate db collection-name stages) opts')))
 
         "insert"
         (let [document-or-documents (first args)]
