@@ -1,5 +1,5 @@
 language: clojure
-lein: lein2
+lein: lein
 script: lein midje
 sudo: false
 services:
@@ -12,4 +12,5 @@ addons:
     - mongodb-org-server
 jdk:
   - openjdk7
-  - oraclejdk8
+  - openjdk8
+  - openjdk11
