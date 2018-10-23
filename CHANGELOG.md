@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.8.0
+
+- MongoDB 3.4+ support for aggregate with cursor
+
 ## 0.7.0
 
 - Add db.collection.insert() and db.collection.insertOne() functions
